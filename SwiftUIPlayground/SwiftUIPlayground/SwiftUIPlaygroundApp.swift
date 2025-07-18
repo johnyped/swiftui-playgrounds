@@ -8,10 +8,16 @@
 import SwiftUI
 
 @main
-struct SwiftUIPlaygroundApp: App {
+struct SwiftUIPlaygroundApp: App {        
+    
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+    #if os(iOS)
+        iOSRootScene()
+    #elseif os(ipadOS)
+        iPadRootScene()
+    #elseif os(macOS)
+        MacRootScene()
+    #endif    
     }
 }
+
