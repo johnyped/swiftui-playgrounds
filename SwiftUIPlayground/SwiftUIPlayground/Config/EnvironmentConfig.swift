@@ -167,9 +167,9 @@ extension EnvironmentConfig {
     // MARK: - Get Configuration File Name
     static func getConfigurationFileName() -> String {
         #if DEBUG
-        return "config_dev.yml"
+        return ".config/config_dev.yml"
         #else
-        return "config_prod.yml"    
+        return ".config/config_prod.yml"    
         #endif
     }
 
