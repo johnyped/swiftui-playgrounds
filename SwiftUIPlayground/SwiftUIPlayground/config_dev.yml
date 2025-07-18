@@ -1,0 +1,18 @@
+# Development Environment Configuration
+api:
+  base_url: "http://157.230.37.164"
+  version: "v4"
+  endpoints:
+    auth_login: "/auth/login"
+    auth_apple_login: "/auth/apple-login"
+    hotels: "/hotels"
+
+app:
+  name: "SwiftUIPlayground Dev"
+  debug_mode: true
+  timeout_interval: 30.0
+
+features:
+  logging: true
+  analytics: false
+  crash_reporting: false 

@@ -14,14 +14,14 @@ struct SwiftUIPlaygroundApp: App {
     var body: some Scene {
     #if os(iOS)
         iOSRootScene()
-            .environment(\.configuration, configurationManager.currentConfig)
+            .environment(\.configuration, configurationManager.config)
     #elseif os(ipadOS)
         iPadRootScene()
-            .environment(\.configuration, configurationManager.currentConfig)
+            .environment(\.configuration, configurationManager.config)
     #elseif os(macOS)
         MacRootScene()
-            .environment(\.configuration, configurationManager.currentConfig)
-    #endif    
+            .environment(\.configuration, configurationManager.config)
+    #endif
     }
 }
 

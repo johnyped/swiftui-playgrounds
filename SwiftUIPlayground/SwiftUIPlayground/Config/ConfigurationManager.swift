@@ -11,30 +11,16 @@ import SwiftUI
 class ConfigurationManager {
     static let shared = ConfigurationManager()
     
-    var currentConfig: EnvironmentConfig
+    var config: EnvironmentConfig
     
     private init() {
-        #if DEBUG
-        self.currentConfig = EnvironmentConfig.development
-        #else
-        self.currentConfig = EnvironmentConfig.production
-        #endif
+        self.config = EnvironmentConfig()
+        print("✅ Loaded configuration from YAML file")
     }
     
-    func switchToDevelopment() {
-        currentConfig = EnvironmentConfig.development
+    func reloadConfiguration() {
+        self.config = EnvironmentConfig()
+        print("✅ Reloaded configuration from YAML file")
     }
     
-    func switchToProduction() {
-        currentConfig = EnvironmentConfig.production
-    }
-    
-    // Helper method to get current environment name
-    var environmentName: String {
-        #if DEBUG
-        return "Development"
-        #else
-        return "Production"
-        #endif
-    }
 }
