@@ -61,7 +61,13 @@ Package.resolved
 ### Xcode ###
 ## User settings
 xcuserdata/
+
+## Environment Configuration Files
 .env
+.env_dev
+.env_prod
+.env.local
+.env.*.local
 
 ## Xcode 8 and earlier
 *.xcscmblueprint
