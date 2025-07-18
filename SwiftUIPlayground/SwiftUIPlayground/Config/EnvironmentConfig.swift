@@ -46,7 +46,7 @@ struct EnvironmentConfig: Decodable {
     }
     
     // Helper method to get current environment name
-    var environmentName: String {
+    var environmentName: String {     
         #if DEBUG
         return "Development"
         #else
@@ -169,7 +169,7 @@ extension EnvironmentConfig {
         #if DEBUG
         return "config_dev.yml"
         #else
-        return "config_prod.yml"
+        return "config_prod.yml"    
         #endif
     }
 

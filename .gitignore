@@ -69,6 +69,10 @@ xcuserdata/
 .env.local
 .env.*.local
 
+# Configuration files
+config_dev.yml
+config_prod.yml
+
 ## Xcode 8 and earlier
 *.xcscmblueprint
 *.xccheckout
@@ -355,3 +359,6 @@ derivedDataPath/
 # For rbenv
 .ruby-version
 *.xcuserstate
+SwiftUIPlayground/.DS_Store
+SwiftUIPlayground/.DS_Store
+SwiftUIPlayground/.DS_Store
