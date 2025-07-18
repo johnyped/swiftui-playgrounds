@@ -38,3 +38,15 @@ struct ErrorSheetView: View {
         .presentationDetents([.medium])
     }
 }
+
+//#Preview {
+//    @Previewable @State var isPresented = false
+//    Button("Show Error Sheet") {
+//        isPresented = true
+//    }.sheet(isPresented: $isPresented) {
+//        ErrorSheetView(errorMessage: "Error Message") {
+//            isPresented = false
+//        }
+//    }
+//   
+//}

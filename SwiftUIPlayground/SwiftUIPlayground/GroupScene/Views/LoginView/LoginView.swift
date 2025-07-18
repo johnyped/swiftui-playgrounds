@@ -174,3 +174,7 @@ struct LoginView: View {
         }
     }
 }
+
+#Preview {
+    LoginView()
+}
