@@ -10,8 +10,7 @@ import SwiftUI
 struct iOSRootScene: Scene {
     var body: some Scene {
         WindowGroup {
-            //Text("iOS")
-            MenuViews()
+            Text("iOS")
         }
     }
 }
