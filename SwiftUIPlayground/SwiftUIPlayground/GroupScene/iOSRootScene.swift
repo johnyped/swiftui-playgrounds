@@ -10,7 +10,7 @@ import SwiftUI
 struct iOSRootScene: Scene {
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            Text("iOS Root")
         }
     }
 }
