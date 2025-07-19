@@ -8,7 +8,16 @@
 import Foundation
 import SwiftUI
 
-struct EnvironmentConfig: Decodable {   
+struct EnvironmentConfig: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case appEnvironment = "APP_ENVIRONMENT"
+        case pmsApiBaseUrl = "PMS_API_BASE_URL"
+        case pmsApiVersion = "PMS_API_BASE_VERSION"
+        case appName = "APP_NAME"
+        case logEnabled = "LOG_ENABLED"
+    }
+    
     let appEnvironment: AppEnvironment
     let pmsApiBaseUrl: String
     let pmsApiVersion: String
@@ -17,6 +26,10 @@ struct EnvironmentConfig: Decodable {
     
     let logEnabled: Bool
     
+//    // Computed property to get Bool value
+//    var isLogEnabled: Bool {
+//        return logEnabled == "1"
+//    }
   
    var pmsApiBaseURL: String {
        return "\(pmsApiBaseUrl)/api/\(pmsApiVersion)"
@@ -33,18 +46,35 @@ struct EnvironmentConfig: Decodable {
         self.appName = appName
         self.logEnabled = logEnabled
     }
-        
+    
     init() {
-        let dict = Bundle.main.infoDictionary
-        let appConfig = dict?["APP_CONFIG"] as? [String: Any]
-        
-        let appEnvironment = appConfig?["APP_ENVIRONMENT"] as? String ?? ""
-        self.appEnvironment = .init(rawValue: appEnvironment)
-        
-        self.pmsApiBaseUrl = appConfig?["PMS_API_BASE_URL"] as? String ?? ""
-        self.pmsApiVersion = appConfig?["PMS_API_BASE_VERSION"] as? String ?? ""
-        self.appName = appConfig?["APP_NAME"] as? String ?? ""
-        self.logEnabled = (appConfig?["LOG_ENABLED"] as? String ?? "0") == "1"
+        guard let dict = Bundle.main.infoDictionary,
+              let appConfigData = dict["APP_CONFIG"] as? [String: Any] else {
+            fatalError("fail on load app config")
+        }
+        do {
+            print("🔧 App Config Data:")
+            print("--------------------------------")
+            if let jsonString = String(data: try JSONSerialization.data(withJSONObject: appConfigData, options: .prettyPrinted), encoding: .utf8) {
+                print(jsonString)
+            }
+            print("--------------------------------")
+            let jsonData = try JSONSerialization.data(withJSONObject: appConfigData)            
+            self = try JSONDecoder().decode(EnvironmentConfig.self, from: jsonData)
+        }
+        catch {
+            fatalError("fail on load app config, reason: \(error)")
+        }
+    }
+    
+    // decode
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.appEnvironment = try container.decode(AppEnvironment.self, forKey: .appEnvironment)
+        self.pmsApiBaseUrl = try container.decode(String.self, forKey: .pmsApiBaseUrl)
+        self.pmsApiVersion = try container.decode(String.self, forKey: .pmsApiVersion)
+        self.appName = try container.decode(String.self, forKey: .appName)
+        self.logEnabled = try container.decode(String.self, forKey: .logEnabled) == "1"
     }
     
     // MARK: - Logging Helper
