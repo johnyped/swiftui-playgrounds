@@ -1,0 +1,16 @@
+//
+//  prod.xcconfig
+//  SwiftUIPlayground
+//
+//  Created by IntrodexMini on 19/7/2568 BE.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+APP_ENVIRONMENT = PROD
+PMS_API_BASE_URL = https:/$()/api.example.com
+PMS_API_BASE_VERSION = v4
+
+APP_NAME = SwiftUI Playground
+
+LOG_ENABLED = 0

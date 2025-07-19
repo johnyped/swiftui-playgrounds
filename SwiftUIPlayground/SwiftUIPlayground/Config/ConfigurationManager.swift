@@ -15,12 +15,10 @@ class ConfigurationManager {
     
     private init() {
         self.config = EnvironmentConfig()
-        print("✅ Loaded configuration from YAML file")
     }
     
     func reloadConfiguration() {
         self.config = EnvironmentConfig()
-        print("✅ Reloaded configuration from YAML file")
     }
     
 }

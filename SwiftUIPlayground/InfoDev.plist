@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>APP_CONFIG</key>
+	<dict>
+		<key>APP_ENVIRONMENT</key>
+		<string>$(APP_ENVIRONMENT)</string>
+		<key>APP_NAME</key>
+		<string>$(APP_NAME)</string>
+		<key>LOG_ENABLED</key>
+		<string>$(LOG_ENABLED)</string>
+		<key>PMS_API_BASE_URL</key>
+		<string>$(PMS_API_BASE_URL)</string>
+		<key>PMS_API_BASE_VERSION</key>
+		<string>$(PMS_API_BASE_VERSION)</string>
+	</dict>
+</dict>
+</plist>

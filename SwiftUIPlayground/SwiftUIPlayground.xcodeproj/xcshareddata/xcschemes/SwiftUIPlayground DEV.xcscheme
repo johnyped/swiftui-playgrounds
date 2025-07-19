@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0F53A7912E25029F0096E995"
-               BuildableName = "SwiftUIPlayground.app"
-               BlueprintName = "SwiftUIPlayground"
+               BlueprintIdentifier = "0F32EE942E2B8EE2005E3FCE"
+               BuildableName = "SwiftUIPlayground DEV.app"
+               BlueprintName = "SwiftUIPlayground DEV"
                ReferencedContainer = "container:SwiftUIPlayground.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0F53A7912E25029F0096E995"
-            BuildableName = "SwiftUIPlayground.app"
-            BlueprintName = "SwiftUIPlayground"
+            BlueprintIdentifier = "0F32EE942E2B8EE2005E3FCE"
+            BuildableName = "SwiftUIPlayground DEV.app"
+            BlueprintName = "SwiftUIPlayground DEV"
             ReferencedContainer = "container:SwiftUIPlayground.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -57,22 +57,21 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0F53A7912E25029F0096E995"
-            BuildableName = "SwiftUIPlayground.app"
-            BlueprintName = "SwiftUIPlayground"
+            BlueprintIdentifier = "0F32EE942E2B8EE2005E3FCE"
+            BuildableName = "SwiftUIPlayground DEV.app"
+            BlueprintName = "SwiftUIPlayground DEV"
             ReferencedContainer = "container:SwiftUIPlayground.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
