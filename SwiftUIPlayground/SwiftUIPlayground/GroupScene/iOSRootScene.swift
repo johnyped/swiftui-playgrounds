@@ -8,9 +8,20 @@
 import SwiftUI
 
 struct iOSRootScene: Scene {
+    
+    @StateObject
+    var tokenStorage: TokenStorage = TokenStorage.shared
+    
     var body: some Scene {
         WindowGroup {
-            Text("iOS")
+            Group {
+                if tokenStorage.isAuthenticated {
+                    HomeView()
+                } else {
+                    LoginView()
+                }
+            }
+            .environmentObject(tokenStorage)
         }
     }
 }
