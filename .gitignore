@@ -348,3 +348,5 @@ derivedDataPath/
 
 # For rbenv
 .ruby-version
+*/project.xcworkspace/xcuserdata
+*/xcuserdata/introdexmini.xcuserdatad/xcdebugger

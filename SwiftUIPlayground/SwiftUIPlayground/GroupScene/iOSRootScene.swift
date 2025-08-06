@@ -6,22 +6,27 @@
 //
 
 import SwiftUI
+import Observation
 
 struct iOSRootScene: Scene {
     
-    @StateObject
-    var tokenStorage: TokenStorage = TokenStorage.shared
+//    @StateObject
+//    var tokenStorage: TokenStorage = TokenStorage.shared
+    
+    @Bindable
+    var appState: AppState = .init(tokenStorage: TokenStorage.shared)
     
     var body: some Scene {
         WindowGroup {
             Group {
-                if tokenStorage.isAuthenticated {
+                if appState.isAuthenticated {
                     HomeView()
                 } else {
                     LoginView()
                 }
             }
-            .environmentObject(tokenStorage)
+            //.environmentObject(tokenStorage)
+            .environment(appState)
         }
     }
 }

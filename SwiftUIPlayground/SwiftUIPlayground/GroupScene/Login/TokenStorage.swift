@@ -8,63 +8,107 @@
 import Combine
 import Foundation
 
-class TokenStorage: ObservableObject {
+@Observable
+class TokenStorage {
     static let shared = TokenStorage()
 
-    @Published
+    var hasValidTokens: Bool {
+        accessToken != nil && refreshToken != nil
+    }
+
     private(set) var isAuthenticated: Bool
 
-    @Published
     private(set) var accessToken: String? {
         didSet {
-            UserDefaults.standard.set(accessToken, forKey: "accessToken")
+            TokenStorage.saveAccessToken(accessToken)
         }
     }
-
-    @Published
     private(set) var refreshToken: String? {
         didSet {
-            UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
+            TokenStorage.saveRefreshToken(refreshToken)
         }
     }
 
-    private init() {
+    init() {
         // Load on first launch
-        let _accessToken = UserDefaults.standard.string(forKey: "accessToken")
-        let _refreshToken = UserDefaults.standard.string(forKey: "refreshToken")
-        self.accessToken = _accessToken
-        self.refreshToken = _refreshToken
-
-        isAuthenticated =
-            if let _accessToken,
-                let _refreshToken
+        let accToken = TokenStorage.loadAccessToken()
+        let refToken = TokenStorage.loadRefreshToken()
+        
+        self.accessToken = accToken
+        self.refreshToken = refToken
+        //        self.isAuthenticated = TokenStorage.isAlreadyAuthenticated(
+        //            accessToken: self.accessToken,
+        //            refreshToken: self.refreshToken
+        //        )
+        self.isAuthenticated =
+            if let accToken,
+                let refToken
             {
-                _accessToken.count > 0 && _refreshToken.count > 0
-            } else { false }
-
+                true
+                //!accToken.isEmpty && !refToken.isEmpty
+            } else {
+                false
+            }
     }
 
-    func updateTokens(access: String?, refresh: String?) {
+    func updateTokens(
+        access: String?,
+        refresh: String?
+    ) {
         self.accessToken = access
         self.refreshToken = refresh
-        self.isAuthenticated =
-            if let access,
-                let refresh
-            {
-                access.count > 0 && refresh.count > 0
-            } else { false }
+        self.isAuthenticated = TokenStorage.isAlreadyAuthenticated(
+            accessToken: self.accessToken,
+            refreshToken: self.refreshToken
+        )
     }
 
     func clearTokens() {
         self.accessToken = nil
         self.refreshToken = nil
-        UserDefaults.standard.removeObject(forKey: "accessToken")
-        UserDefaults.standard.removeObject(forKey: "refreshToken")
-        
-        isAuthenticated = false
+        self.isAuthenticated = false
     }
 
-    var hasValidTokens: Bool {
-        accessToken != nil && refreshToken != nil
+}
+
+extension TokenStorage {
+    static func isAlreadyAuthenticated(
+        accessToken: String?,
+        refreshToken: String?
+    ) -> Bool {
+        if let accessToken,
+            let refreshToken
+        {
+            return !accessToken.isEmpty && !refreshToken.isEmpty
+        } else {
+            return false
+        }
     }
+
+    static func loadAccessToken() -> String? {
+        UserDefaults.standard.string(forKey: "accessToken")
+    }
+
+    static func saveAccessToken(_ token: String?) {
+        if token == nil {
+            UserDefaults.standard.removeObject(forKey: "accessToken")
+            return
+        }
+
+        UserDefaults.standard.set(token, forKey: "accessToken")
+    }
+
+    static func loadRefreshToken() -> String? {
+        UserDefaults.standard.string(forKey: "refreshToken")
+    }
+
+    static func saveRefreshToken(_ token: String?) {
+        if token == nil {
+            UserDefaults.standard.removeObject(forKey: "refreshToken")
+            return
+        }
+
+        UserDefaults.standard.set(token, forKey: "refreshToken")
+    }
+
 }
