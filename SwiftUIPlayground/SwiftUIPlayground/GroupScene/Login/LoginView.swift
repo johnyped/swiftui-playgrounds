@@ -9,39 +9,51 @@ import SwiftUI
 
 struct LoginView: View {
     //@EnvironmentObject var tokenStorage: TokenStorage
-    @Environment(AppState.self) private var appState
+    //@Environment(AppState.self) private var appState
+    @State var vm: LoginViewVM
 
     var body: some View {
         Text("LoginView")
         VStack {
             HStack {
                 Text("isAuthenticated: ")
-                Spacer()
-                Text("\(appState.isAuthenticated ? "true" : "false")")
+                //Text("\(appState.isAuthenticated ? "true" : "false")")
+                Text("\(vm.isAuthenticated ? "true" : "false")")
             }
             HStack {
                 Text("Access Token: ")
-                Spacer()
-                Text("\(appState.tokenStorage.accessToken ?? "N/A")")
+                //Text("\(appState.tokenStorage.accessToken ?? "N/A")")
+                Text("\(vm.accessToken ?? "N/A")")
             }
             HStack {
                 Text("Refresh Token: ")
-                Spacer()
-                Text("\(appState.tokenStorage.refreshToken ?? "N/A")")
+                //Text("\(appState.tokenStorage.refreshToken ?? "N/A")")
+                Text("\(vm.refreshToken ?? "N/A")")
             }
         }.multilineTextAlignment(.leading)
+        Spacer().frame(height: 50)
         Button("Login") {
             // login
            
             print(">>> Login success")
             //let tokenStorage = TokenStorage.shared
             
-            appState.tokenStorage.updateTokens(
+            //appState.tokenStorage.updateTokens(
+            
             //tokenStorage.updateTokens(
-                access: "accessToken",
-                refresh: "refreshToken"
+            vm.updateTokens(
+                accessToken: "accessToken",
+                refreshToken: "refreshToken"
             )
-            appState.debug()
+            //appState.debug()
+            vm.debug()
+        }
+        Button("Read TokenStorage") {
+            let ts = TokenStorage.shared
+            print(">>>>>>>>>>>>>>>>>>>>>>>")
+            print(">>> Read TokenStorage")
+            print("tokenStorage.accessToken: \(ts.accessToken ?? "N/A")")
+            print("tokenStorage.refreshToken: \(ts.refreshToken ?? "N/A")")
         }
     }
 }

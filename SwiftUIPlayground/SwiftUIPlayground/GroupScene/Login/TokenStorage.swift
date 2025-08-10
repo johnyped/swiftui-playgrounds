@@ -10,13 +10,22 @@ import Foundation
 
 @Observable
 class TokenStorage {
+    let lock = NSLock()
     static let shared = TokenStorage()
 
     var hasValidTokens: Bool {
         accessToken != nil && refreshToken != nil
     }
 
-    private(set) var isAuthenticated: Bool
+    var isAuthenticated: Bool {
+        if let accessToken,
+            let refreshToken
+        {
+            return !accessToken.isEmpty && !refreshToken.isEmpty
+        } else {
+            return false
+        }
+    }
 
     private(set) var accessToken: String? {
         didSet {
@@ -30,6 +39,9 @@ class TokenStorage {
     }
 
     init() {
+        lock.lock()
+        defer { lock.unlock() }
+        
         // Load on first launch
         let accToken = TokenStorage.loadAccessToken()
         let refToken = TokenStorage.loadRefreshToken()
@@ -40,33 +52,38 @@ class TokenStorage {
         //            accessToken: self.accessToken,
         //            refreshToken: self.refreshToken
         //        )
-        self.isAuthenticated =
-            if let accToken,
-                let refToken
-            {
-                true
-                //!accToken.isEmpty && !refToken.isEmpty
-            } else {
-                false
-            }
+//        self.isAuthenticated =
+//            if let accToken,
+//                let refToken
+//            {
+//                !accToken.isEmpty && !refToken.isEmpty
+//            } else {
+//                false
+//            }
     }
 
     func updateTokens(
         access: String?,
         refresh: String?
     ) {
+        lock.lock()
+        defer { lock.unlock() }
+        
         self.accessToken = access
         self.refreshToken = refresh
-        self.isAuthenticated = TokenStorage.isAlreadyAuthenticated(
-            accessToken: self.accessToken,
-            refreshToken: self.refreshToken
-        )
+//        self.isAuthenticated = TokenStorage.isAlreadyAuthenticated(
+//            accessToken: self.accessToken,
+//            refreshToken: self.refreshToken
+//        )
     }
 
     func clearTokens() {
+        lock.lock()
+        defer { lock.unlock() }
+        
         self.accessToken = nil
         self.refreshToken = nil
-        self.isAuthenticated = false
+        //self.isAuthenticated = false
     }
 
 }

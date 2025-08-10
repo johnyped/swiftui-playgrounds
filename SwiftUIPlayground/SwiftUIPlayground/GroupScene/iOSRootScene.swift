@@ -10,23 +10,18 @@ import Observation
 
 struct iOSRootScene: Scene {
     
-//    @StateObject
-//    var tokenStorage: TokenStorage = TokenStorage.shared
-    
-    @Bindable
-    var appState: AppState = .init(tokenStorage: TokenStorage.shared)
+    @State private var tokenStorage: TokenStorage = TokenStorage.shared
     
     var body: some Scene {
         WindowGroup {
             Group {
-                if appState.isAuthenticated {
-                    HomeView()
+                if tokenStorage.isAuthenticated {
+                    HomeView(vm: HomeViewVM(ts: tokenStorage))
                 } else {
-                    LoginView()
+                    LoginView(vm: LoginViewVM(ts: tokenStorage))
                 }
             }
-            //.environmentObject(tokenStorage)
-            .environment(appState)
+            .environment(tokenStorage)
         }
     }
 }
