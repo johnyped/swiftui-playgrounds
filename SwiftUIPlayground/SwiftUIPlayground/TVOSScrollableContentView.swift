@@ -12,20 +12,21 @@ struct TVOSScrollableContentView: View {
     @StateObject private var viewModel = TVOSScrollableContentViewModel()
     @FocusState private var isFocused: Bool
     @FocusState private var toggleButtonFocused: Bool
-    
+
     // View-specific geometry state
     @State private var textHeight: CGFloat = 0
     @State private var viewportHeight: CGFloat = 0
-    
+    @State private var topOffset: CGFloat = 0
+
     // View constants
-    private let extraPadding: CGFloat = 50
-    
+    private let scrollStep: CGFloat = 300
+
     // Computed maximum scroll offset based on geometry
     private var maxScrollOffset: CGFloat {
-        let calculatedMax = max(0, textHeight - viewportHeight + extraPadding)
+        let calculatedMax = max(0, textHeight - viewportHeight)
         return calculatedMax
     }
-    
+
     var body: some View {
         ZStack {
             // Main ScrollView Container
@@ -40,42 +41,45 @@ struct TVOSScrollableContentView: View {
                                 .foregroundColor(.white)
                         case .attributed:
                             Text(viewModel.attributedText)
-								.foregroundStyle(Color.gray.opacity(0.2))
+                                .foregroundStyle(Color.gray.opacity(0.2))
                         }
                     }
                     .padding(.horizontal, 60)
-                    .padding(.top, viewModel.topOffset)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(
+                        // Measure text height BEFORE applying scrolling offset
                         GeometryReader { textGeometry in
                             Color.clear
                                 .onAppear {
                                     // Capture text height when it first appears
                                     textHeight = textGeometry.size.height
                                     viewportHeight = viewportGeometry.size.height
-									print("#DEBUG: onAppear")
-									print("#DEBUG: textHeight: \(textHeight)")
-									print("#DEBUG: viewportHeight: \(viewportHeight)")
+                                    print("#DEBUG: onAppear")
+                                    print("#DEBUG: textHeight: \(textHeight)")
+                                    print("#DEBUG: viewportHeight: \(viewportHeight)")
                                 }
                                 .onChange(of: textGeometry.size.height) { oldHeight, newHeight in
-                                    // Update if text height changes
-//									if textHeight == 0 {
-//										textHeight = newHeight
-//									}
-                                    textHeight = newHeight+300
-									print("#DEBUG: onChange")
-									print("#DEBUG: textGeometry.size.height: \(newHeight)")
+                                    // Only update if the change is significant (actual content change, not layout shift)
+                                    // Ignore small changes that might be from layout adjustments
+                                    if abs(newHeight - textHeight) > 10 {
+                                        textHeight = newHeight
+                                        print("#DEBUG: onChange text height")
+                                        print("#DEBUG: textGeometry.size.height: \(newHeight)")
+                                    }
                                 }
                         }
                     )
-                    .animation(.easeInOut(duration: 0.3), value: viewModel.topOffset)
+                    // Apply scrolling offset AFTER measurement
+                    .padding(.top, topOffset)
+                    .animation(.easeInOut(duration: 0.3), value: topOffset)
                 }
-                .scrollDisabled(true) // Disable native scrolling
+                .scrollDisabled(true)  // Disable native scrolling
                 .background(Color.black)
-                .clipped() // Ensure content is clipped at borders
-                .onAppear {
-                    viewportHeight = viewportGeometry.size.height
-                }
+                .clipped()  // Ensure content is clipped at borders
+            }
+            .onChange(of: viewModel.contentMode, initial: false) { oldValue, newValue in
+                // reset
+                topOffset = 0
             }
             .overlay(
                 // Invisible focusable button to capture remote button input
@@ -94,7 +98,7 @@ struct TVOSScrollableContentView: View {
                 // Ensure the view is focused on appear
                 isFocused = true
             }
-            
+
             // Loading overlay
             if viewModel.isLoading {
                 ZStack {
@@ -118,7 +122,7 @@ struct TVOSScrollableContentView: View {
                     Spacer()
                     VStack(alignment: .trailing, spacing: 4) {
                         Text("Mode: \(viewModel.contentMode == .plain ? "Plain" : "Attributed")")
-                        Text("Offset: \(Int(viewModel.topOffset))")
+                        Text("Offset: \(Int(topOffset))")
                         Text("Max: -\(Int(maxScrollOffset))")
                         Text("Text H: \(Int(textHeight))")
                         Text("View H: \(Int(viewportHeight))")
@@ -133,26 +137,50 @@ struct TVOSScrollableContentView: View {
             }
         }
     }
-    
+
     private func handleMoveCommand(direction: MoveCommandDirection) {
         withAnimation(.easeInOut(duration: 0.3)) {
             switch direction {
             case .down:
                 // Button DOWN - scroll content up (show later content)
-                viewModel.scrollUp(maxOffset: maxScrollOffset)
+                scrollUp()
             case .up:
                 // Button UP - scroll content down (show earlier content)
-                viewModel.scrollDown()
+                scrollDown()
             case .left:
                 // Switch focus to toggle button
                 toggleButtonFocused = true
+                viewModel.leftBtnAction()
             case .right:
                 // Return focus to scrollable content
                 isFocused = true
+                viewModel.rightBtnAction()
             default:
                 break
             }
         }
+    }
+
+    private func scrollUp() {
+        let newOffset = topOffset - scrollStep
+        if abs(newOffset) >= maxScrollOffset {
+            topOffset = -maxScrollOffset
+            return
+        }
+
+        topOffset = newOffset
+    }
+
+    private func scrollDown() {
+        let newOffset = topOffset + scrollStep
+
+        // Don't scroll beyond the top edge
+        if newOffset >= 0 {
+            topOffset = 0
+            return
+        }
+
+        topOffset = newOffset
     }
 }
 

@@ -13,17 +13,13 @@ import Combine
 class TVOSScrollableContentViewModel: ObservableObject {
     
     // MARK: - Published Properties
-    @Published var topOffset: CGFloat = 0
     @Published var isLoading: Bool = false
-	@Published var contentMode: ContentMode = .plain
+    @Published var contentMode: ContentMode = .plain
     
     // Content
     @Published var plainText: String = ""
     @Published var attributedText: AttributedString = AttributedString("")
-    
-    // MARK: - Constants
-    let scrollStep: CGFloat = 300
-    
+
     // MARK: - Content Mode
     enum ContentMode {
         case plain
@@ -66,65 +62,29 @@ class TVOSScrollableContentViewModel: ObservableObject {
             isLoading = false
         }
     }
-    
-    /// Toggle between plain and attributed text modes
-    func toggleContentMode() {
-        // Reset scroll position when switching
-        resetScrollPosition()
+
+    func leftBtnAction() {
+        guard contentMode != .plain else { return }
+
+        // Load plain text if not already loaded
+        if plainText.isEmpty {
+            loadPlainText()
+        }
         
-        switch contentMode {
-        case .plain:
-            contentMode = .attributed
-            if attributedText.characters.isEmpty {
-                loadAttributedText()
-            }
-        case .attributed:
-            contentMode = .plain
-            if plainText.isEmpty {
-                loadPlainText()
-            }
+        self.contentMode = .plain
+    }
+
+    func rightBtnAction() {
+        guard contentMode != .attributed else { return }
+
+        // Load attributed text if not already loaded
+        if attributedText.characters.isEmpty {
+            loadAttributedText()
         }
+        
+        self.contentMode = .attributed
     }
-    
-    // MARK: - Scroll Logic
-    
-    func scrollUp(maxOffset: CGFloat) {
-		//topOffset -= scrollStep
-        // Clamp to maximum scroll (prevent scrolling past the end)
-//        if abs(topOffset) > maxOffset {
-//            topOffset = -maxOffset
-//			return
-//        }
 
-		let newOffset = topOffset - scrollStep
-
-		print("DEBUG: scrollUp.newOffset: \(newOffset)")
-		print("DEBUG: maxOffset: \(maxOffset)")
-
-		if abs(newOffset) < maxOffset {
-			topOffset = -maxOffset
-			return
-		}
-
-		topOffset = 0
-
-
-    }
-    
-    func scrollDown() {
-        // Don't scroll beyond the top
-        if topOffset >= 0 {
-            topOffset = 0
-			return
-        }
-
-		topOffset += scrollStep
-    }
-    
-    func resetScrollPosition() {
-        topOffset = 0
-    }
-    
     // MARK: - Content Generation
     
     private func generatePlainText() -> String {
