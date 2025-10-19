@@ -733,4 +733,308 @@ struct JsonFileTests {
 		let unwrappedWithoutPath = try #require(withoutPath)
 		#expect(unwrappedWithPath == unwrappedWithoutPath, "Should load the same file")
 	}
+
+	// MARK: - Array Decoding Tests (Optional Version)
+
+	@Test("Decode array from JSON file successfully")
+	func decodeArrayFromFileSuccess() throws {
+		// Given
+		let fileName = "users"
+
+		// When
+		let users = jsonFileRoot.decodeArray(from: fileName, as: Person.self)
+
+		// Then
+		let unwrappedUsers = try #require(users, "Users array should be decoded successfully")
+		#expect(unwrappedUsers.count == 3, "Should have 3 users")
+		#expect(unwrappedUsers[0].id == 1)
+		#expect(unwrappedUsers[0].name == "Alice Johnson")
+		#expect(unwrappedUsers[1].id == 2)
+		#expect(unwrappedUsers[1].name == "Bob Smith")
+		#expect(unwrappedUsers[2].id == 3)
+		#expect(unwrappedUsers[2].name == "Charlie Brown")
+	}
+
+	@Test("Decode array from nested directory")
+	func decodeArrayFromNestedDirectory() throws {
+		// Given
+		let fileName = "team"
+
+		// When
+		let team = jsonFileNested.decodeArray(from: fileName, as: Person.self)
+
+		// Then
+		let unwrappedTeam = try #require(team, "Team array should be decoded from nested path")
+		#expect(unwrappedTeam.count == 4, "Should have 4 team members")
+		#expect(unwrappedTeam[0].id == 10)
+		#expect(unwrappedTeam[0].name == "David Lee")
+		#expect(unwrappedTeam[3].id == 40)
+		#expect(unwrappedTeam[3].name == "Grace Kim")
+	}
+
+	@Test("Decode empty array from JSON file")
+	func decodeEmptyArrayFromFile() throws {
+		// Given
+		let fileName = "empty_array"
+
+		// When
+		let emptyArray = jsonFileRoot.decodeArray(from: fileName, as: Person.self)
+
+		// Then
+		let unwrappedArray = try #require(emptyArray, "Empty array should be decoded")
+		#expect(unwrappedArray.isEmpty, "Array should be empty")
+		#expect(unwrappedArray.count == 0, "Count should be 0")
+	}
+
+	@Test("Decode large array from nested directory")
+	func decodeLargeArrayFromNestedDirectory() throws {
+		// Given
+		let fileName = "large_team"
+
+		// When
+		let largeTeam = jsonFileNested.decodeArray(from: fileName, as: Person.self)
+
+		// Then
+		let unwrappedTeam = try #require(largeTeam, "Large team array should be decoded")
+		#expect(unwrappedTeam.count == 8, "Should have 8 team members")
+		
+		// Verify first element
+		#expect(unwrappedTeam.first?.id == 100)
+		#expect(unwrappedTeam.first?.name == "Henry Park")
+		
+		// Verify last element
+		#expect(unwrappedTeam.last?.id == 107)
+		#expect(unwrappedTeam.last?.name == "Olivia Moore")
+		
+		// Verify middle element
+		#expect(unwrappedTeam[3].id == 103)
+		#expect(unwrappedTeam[3].name == "Kelly Davis")
+	}
+
+	@Test("Array decoding returns nil for non-existent file")
+	func decodeArrayFromNonExistentFile() {
+		// Given
+		let fileName = "nonexistent_array"
+
+		// When
+		let array = jsonFileRoot.decodeArray(from: fileName, as: Person.self)
+
+		// Then
+		#expect(array == nil, "Should return nil for non-existent file")
+	}
+
+	@Test("Array decoding returns nil for wrong type")
+	func decodeArrayWithWrongType() {
+		// Given
+		let fileName = "users"
+
+		// When - Try to decode with wrong type
+		let wrongArray = jsonFileRoot.decodeArray(from: fileName, as: PersonWithStringId.self)
+
+		// Then
+		#expect(wrongArray == nil, "Should return nil when array element types don't match")
+	}
+
+	// MARK: - Array Decoding Tests (Throwing Version)
+
+	@Test("Decode array with throwing version successfully")
+	func decodeArrayThrowingVersionSuccess() throws {
+		// Given
+		let fileName = "users"
+
+		// When
+		let users = try jsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
+
+		// Then
+		#expect(users.count == 3)
+		#expect(users[0].name == "Alice Johnson")
+		#expect(users[1].name == "Bob Smith")
+		#expect(users[2].name == "Charlie Brown")
+	}
+
+	@Test("Throwing array decode throws error for non-existent file")
+	func decodeArrayThrowingVersionFileNotFound() {
+		// Given
+		let fileName = "nonexistent_array"
+
+		// Then
+		#expect(throws: JsonFileError.self) {
+			try jsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
+		}
+	}
+
+	@Test("Throwing array decode throws error for wrong type")
+	func decodeArrayThrowingVersionWrongType() {
+		// Given
+		let fileName = "users"
+
+		// Then
+		#expect(throws: JsonFileError.self) {
+			try jsonFileRoot.decodeArray(fileName: fileName, as: PersonWithStringId.self)
+		}
+	}
+
+	@Test("Decode array from root level using flat instance")
+	func decodeArrayFromRootLevel() throws {
+		// Given - Using root-level JsonFile
+		let jsonFile = JsonFile()
+
+		// When
+		let users = jsonFile.decodeArray(from: "users", as: Person.self)
+		let team = jsonFile.decodeArray(from: "team", as: Person.self)
+
+		// Then
+		let unwrappedUsers = try #require(users, "Users should be accessible from root")
+		#expect(unwrappedUsers.count == 3)
+
+		let unwrappedTeam = try #require(team, "Team should be accessible from root")
+		#expect(unwrappedTeam.count == 4)
+	}
+
+	// MARK: - Array Filter and Transform Tests
+
+	@Test("Filter array elements after decoding")
+	func filterArrayAfterDecoding() throws {
+		// Given
+		let fileName = "users"
+
+		// When
+		let users = try jsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
+		
+		// Filter users with id >= 2
+		let filteredUsers = users.filter { $0.id >= 2 }
+
+		// Then
+		#expect(filteredUsers.count == 2)
+		#expect(filteredUsers[0].id == 2)
+		#expect(filteredUsers[1].id == 3)
+	}
+
+	@Test("Map array elements after decoding")
+	func mapArrayAfterDecoding() throws {
+		// Given
+		let fileName = "users"
+
+		// When
+		let users = try jsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
+		let names = users.map { $0.name }
+		let ids = users.map { $0.id }
+
+		// Then
+		#expect(names.count == 3)
+		#expect(names == ["Alice Johnson", "Bob Smith", "Charlie Brown"])
+		#expect(ids == [1, 2, 3])
+	}
+
+	@Test("Find specific element in decoded array")
+	func findElementInDecodedArray() throws {
+		// Given
+		let fileName = "team"
+
+		// When
+		let team = try jsonFileNested.decodeArray(fileName: fileName, as: Person.self)
+		let emma = team.first { $0.name == "Emma Watson" }
+
+		// Then
+		let unwrappedEmma = try #require(emma, "Should find Emma Watson")
+		#expect(unwrappedEmma.id == 20)
+		#expect(unwrappedEmma.name == "Emma Watson")
+	}
+
+	@Test("Sort decoded array")
+	func sortDecodedArray() throws {
+		// Given
+		let fileName = "team"
+
+		// When
+		let team = try jsonFileNested.decodeArray(fileName: fileName, as: Person.self)
+		let sortedByName = team.sorted { $0.name < $1.name }
+		let sortedById = team.sorted { $0.id < $1.id }
+
+		// Then
+		#expect(sortedByName.first?.name == "David Lee")
+		#expect(sortedByName.last?.name == "Grace Kim")
+		#expect(sortedById.first?.id == 10)
+		#expect(sortedById.last?.id == 40)
+	}
+
+	// MARK: - Array Performance Tests
+
+	@Test("Decode large array performance")
+	func decodeLargeArrayPerformance() throws {
+		// Given
+		let fileName = "large_team"
+
+		// When
+		let startTime = Date()
+		let largeTeam = try jsonFileNested.decodeArray(fileName: fileName, as: Person.self)
+		let elapsed = Date().timeIntervalSince(startTime)
+
+		// Then
+		#expect(largeTeam.count == 8)
+		#expect(elapsed < 1.0, "Should decode in less than 1 second")
+		
+		// Verify all elements are unique
+		let uniqueIds = Set(largeTeam.map { $0.id })
+		#expect(uniqueIds.count == largeTeam.count, "All IDs should be unique")
+	}
+
+	// MARK: - Array Integration Tests
+
+	@Test("Load multiple array files and combine")
+	func loadMultipleArrayFilesAndCombine() throws {
+		// Given
+		let usersFile = "users"
+		let teamFile = "team"
+
+		// When
+		let users = try jsonFileRoot.decodeArray(fileName: usersFile, as: Person.self)
+		let team = try jsonFileNested.decodeArray(fileName: teamFile, as: Person.self)
+		let combined = users + team
+
+		// Then
+		#expect(users.count == 3)
+		#expect(team.count == 4)
+		#expect(combined.count == 7, "Combined array should have 7 elements")
+		
+		// Verify first element from users
+		#expect(combined[0].name == "Alice Johnson")
+		
+		// Verify first element from team
+		#expect(combined[3].name == "David Lee")
+	}
+
+	@Test("Decode array and verify all elements")
+	func decodeArrayAndVerifyAllElements() throws {
+		// Given
+		let fileName = "users"
+
+		// When
+		let users = try jsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
+
+		// Then - Verify each element
+		#expect(users.count == 3)
+		
+		for (index, user) in users.enumerated() {
+			#expect(user.id == index + 1, "ID should match index + 1")
+			#expect(!user.name.isEmpty, "Name should not be empty")
+		}
+	}
+
+	@Test("Empty array vs single object distinction")
+	func emptyArrayVsSingleObject() throws {
+		// Given
+		let emptyArrayFile = "empty_array"
+		let singleObjectFile = "content"
+
+		// When
+		let emptyArray = jsonFileRoot.decodeArray(from: emptyArrayFile, as: Person.self)
+		let singleObjectAsArray = jsonFileRoot.decodeArray(from: singleObjectFile, as: Person.self)
+
+		// Then
+		let unwrappedEmpty = try #require(emptyArray, "Empty array should decode")
+		#expect(unwrappedEmpty.isEmpty, "Should be empty array")
+		
+		#expect(singleObjectAsArray == nil, "Single object should not decode as array")
+	}
 }
