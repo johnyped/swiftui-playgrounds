@@ -29,9 +29,22 @@
 		0F53A7A92E2502A00096E995 /* SwiftUIPlaygroundUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIPlaygroundUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A6403B112EA3F5EC00B5F062 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlaygroundTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Util/JsonFile.swift,
+			);
+			target = 0F53A79E2E2502A00096E995 /* SwiftUIPlaygroundTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0F53A7942E25029F0096E995 /* SwiftUIPlayground */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A6403B112EA3F5EC00B5F062 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlaygroundTests" target */,
+			);
 			path = SwiftUIPlayground;
 			sourceTree = "<group>";
 		};

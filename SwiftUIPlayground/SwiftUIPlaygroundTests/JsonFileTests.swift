@@ -1,0 +1,736 @@
+//
+//  JsonFileTests.swift
+//  SwiftUIPlayground
+//
+//  Created by MacAir on 18/10/2568 BE.
+//
+
+import Foundation
+import Testing
+
+// MARK: - Test Models
+
+struct Person: Decodable, Equatable {
+	let id: Int
+	let name: String
+}
+
+struct PersonWithStringId: Decodable, Equatable {
+	let id: String
+	let name: String
+}
+
+// MARK: - Test Suite
+
+@Suite("JsonFile Tests")
+struct JsonFileTests {
+
+	let jsonFileRoot: JsonFile
+	let jsonFileNested: JsonFile
+	let jsonFileFlat: JsonFile // For root-level access with flattened structure
+
+	init() {
+		jsonFileRoot = JsonFile(path: "Jsons")
+		jsonFileNested = JsonFile(path: "Jsons/Nest")
+		jsonFileFlat = JsonFile() // Uses convenience init for root-level files
+	}
+
+	// MARK: - Fallback Mechanism Tests
+
+	@Test("JsonFile works with flattened structure using path")
+	func testFlattenedStructureWithPath() throws {
+		// Given - Files are actually flattened in bundle but we use paths
+		let jsonFileRoot = JsonFile(path: "Jsons")
+		let jsonFileNested = JsonFile(path: "Jsons/Nest")
+
+		// When - Decode with fallback mechanism
+		let person = jsonFileRoot.decode(from: "content", as: Person.self)
+		let nested = jsonFileNested.decode(from: "nest_content", as: Person.self)
+
+		// Then - Should work due to fallback to flattened structure
+		let unwrappedPerson = try #require(person)
+		#expect(unwrappedPerson.id == 1)
+		#expect(unwrappedPerson.name == "John Doe")
+
+		let unwrappedNested = try #require(nested)
+		#expect(unwrappedNested.id == 2)
+		#expect(unwrappedNested.name == "Hana Khunlay")
+	}
+
+	@Test("JsonFile root-level access with convenience init")
+	func testRootLevelAccess() throws {
+		// Given - Using convenience initializer for root-level files
+		let jsonFile = JsonFile()
+
+		// When - Access all flattened files from root
+		let content = jsonFile.decode(from: "content", as: Person.self)
+		let nestContent = jsonFile.decode(from: "nest_content", as: Person.self)
+		let rootContent = jsonFile.decode(from: "root_content", as: Person.self)
+
+		// Then - All should be accessible
+		let unwrappedContent = try #require(content)
+		#expect(unwrappedContent.id == 1)
+		#expect(unwrappedContent.name == "John Doe")
+
+		let unwrappedNest = try #require(nestContent)
+		#expect(unwrappedNest.id == 2)
+		#expect(unwrappedNest.name == "Hana Khunlay")
+
+		let unwrappedRoot = try #require(rootContent)
+		#expect(unwrappedRoot.id == 1)
+		#expect(unwrappedRoot.name == "John Doe")
+	}
+
+	@Test("Print all available paths and files in test bundle")
+	func printAllPathsAndFilesInTestBundle() throws {
+		final class BundleHelper: AnyObject {}
+		let bundle = Bundle(for: BundleHelper.self)
+
+		guard let resourcePath = bundle.resourcePath else {
+			print("No resource path found in test bundle")
+			#expect(false, "No resource path in bundle")
+			return
+		}
+
+		func printDirectoryContents(at path: String, level: Int = 0) {
+			let indent = String(repeating: "  ", count: level)
+			let fileManager = FileManager.default
+			guard let enumerator = fileManager.enumerator(atPath: path) else {
+				print("\(indent)- Could not enumerate directory at \(path)")
+				return
+			}
+			var seenDirs = Set<String>()
+			for case let item as String in enumerator {
+				let fullPath = (path as NSString).appendingPathComponent(item)
+				var isDir: ObjCBool = false
+				if fileManager.fileExists(atPath: fullPath, isDirectory: &isDir) {
+					if isDir.boolValue {
+						let dir = (item as NSString).lastPathComponent
+						if !seenDirs.contains(dir) {
+							print("\(indent)📁 \(item)/")
+							seenDirs.insert(dir)
+						}
+					} else {
+						print("\(indent)📄 \(item)")
+					}
+				}
+			}
+		}
+
+		print("====== Listing all files and folders in test target bundle ======")
+		printDirectoryContents(at: resourcePath)
+		print("======= End of listing =======")
+		#expect(true) // dummy to register as a valid test
+	}
+
+
+	@Test("loading root_content file")
+	func testOnLoadingRootContentFile() throws {
+		// 1. Access the test bundle
+		final class Helpper: AnyObject {}
+		let bundle = Bundle(for: Helpper.self)
+
+		// 2. Locate the JSON file within the bundle
+		guard let url = bundle.url(forResource: "root_content", withExtension: "json") else {
+			#expect(false, "Could not find 'testData.json' in the test bundle.")
+			return
+		}
+
+		// 3. Read the JSON data
+		let data = try Data(contentsOf: url)
+
+		// 4. Decode the JSON data into your struct
+		let decoder = JSONDecoder()
+		let decodedData = try decoder.decode(Person.self, from: data)
+
+		// 5. Assert the decoded data
+		#expect(decodedData.name == "John Doe")
+		#expect(decodedData.id == 1)
+	}
+
+	@Test("loading content file")
+	func testOnLoadingJsonsContentFile() throws {
+		// 1. Access the test bundle
+		final class Helpper: AnyObject {}
+		let bundle = Bundle(for: Helpper.self)
+
+		// 2. Locate the JSON file within the bundle
+		guard let url = bundle.url(forResource: "content", withExtension: "json") else {
+			#expect(false, "Could not find 'content.json' in the test bundle.")
+			return
+		}
+
+		// 3. Read the JSON data
+		let data = try Data(contentsOf: url)
+
+		// 4. Decode the JSON data into your struct
+		let decoder = JSONDecoder()
+		let decodedData = try decoder.decode(Person.self, from: data)
+
+		// 5. Assert the decoded data
+		#expect(decodedData.name == "John Doe")
+		#expect(decodedData.id == 1)
+	}
+
+	@Test("loading nest_content file")
+	func testOnLoadingJsonsNestContentFile() throws {
+		// 1. Access the test bundle
+		final class Helpper: AnyObject {}
+		let bundle = Bundle(for: Helpper.self)
+
+		// 2. Locate the JSON file within the bundle
+		guard let url = bundle.url(forResource: "nest_content", withExtension: "json") else {
+			#expect(false, "Could not find 'nest_content.json' in the test bundle.")
+			return
+		}
+
+		// 3. Read the JSON data
+		let data = try Data(contentsOf: url)
+
+		// 4. Decode the JSON data into your struct
+		let decoder = JSONDecoder()
+		let decodedData = try decoder.decode(Person.self, from: data)
+
+		// 5. Assert the decoded data
+		#expect(decodedData.name == "Hana Khunlay")
+		#expect(decodedData.id == 2)
+	}
+	// MARK: - Root Content Tests
+
+	@Test("Load root_content.json using root-level JsonFile")
+	func loadRootContentFile() throws {
+		// Given
+		let jsonFile = JsonFile() // Root-level access
+
+		// When
+		let person = jsonFile.decode(from: "root_content", as: Person.self)
+
+		// Then
+		let unwrappedPerson = try #require(person, "root_content should be loaded")
+		#expect(unwrappedPerson.id == 1)
+		#expect(unwrappedPerson.name == "John Doe")
+	}
+
+	@Test("Load root_content.json using jsonFileFlat instance")
+	func loadRootContentUsingFlatInstance() throws {
+		// Given - Using the jsonFileFlat instance from init
+
+		// When
+		let person = jsonFileFlat.decode(from: "root_content", as: Person.self)
+
+		// Then
+		let unwrappedPerson = try #require(person, "root_content should be loaded via flat instance")
+		#expect(unwrappedPerson.id == 1)
+		#expect(unwrappedPerson.name == "John Doe")
+	}
+
+	// MARK: - Data Loading Tests (Optional Version)
+
+	@Test("Load data from file successfully")
+	func dataFromFileSuccess() {
+		// Given
+		let fileName = "content"
+
+		// When
+		let data = jsonFileRoot.data(from: fileName)
+
+		// Then
+		#expect(data != nil, "Data should be loaded successfully")
+		#expect(!data!.isEmpty, "Data should not be empty")
+	}
+
+	@Test("Data loading returns nil for non-existent file")
+	func dataFromFileNotFound() {
+		// Given
+		let fileName = "nonexistent"
+
+		// When
+		let data = jsonFileRoot.data(from: fileName)
+
+		// Then
+		#expect(data == nil, "Data should be nil for non-existent file")
+	}
+
+	@Test("Load data from nested directory successfully")
+	func dataFromNestedFileSuccess() {
+		// Given
+		let fileName = "nest_content"
+
+		// When
+		let data = jsonFileNested.data(from: fileName)
+
+		// Then
+		#expect(data != nil, "Data should be loaded from nested path")
+		#expect(!data!.isEmpty, "Data should not be empty")
+	}
+
+	// MARK: - Data Loading Tests (Throwing Version)
+
+	@Test("Load data with throwing version successfully")
+	func dataThrowingVersionSuccess() throws {
+		// Given
+		let fileName = "content"
+
+		// When
+		let data = try jsonFileRoot.data(fileName: fileName)
+
+		// Then
+		#expect(!data.isEmpty, "Data should not be empty")
+	}
+
+	@Test("Throwing version throws error for non-existent file")
+	func dataThrowingVersionFileNotFound() {
+		// Given
+		let fileName = "nonexistent"
+
+		// Then
+		#expect(throws: JsonFileError.self) {
+			try jsonFileRoot.data(fileName: fileName)
+		}
+	}
+
+	// MARK: - Decode Tests (Optional Version)
+
+	@Test("Decode JSON file to model successfully")
+	func decodeFromFileSuccess() throws {
+		// Given
+		let fileName = "content"
+
+		// When
+		let person = jsonFileRoot.decode(from: fileName, as: Person.self)
+
+		// Then
+		let unwrappedPerson = try #require(person, "Person should be decoded successfully")
+		#expect(unwrappedPerson.id == 1)
+		#expect(unwrappedPerson.name == "John Doe")
+	}
+
+	@Test("Type inference works when decoding")
+	func decodeFromFileTypeInference() throws {
+		// Given
+		let fileName = "content"
+
+		// When
+		let person: Person? = jsonFileRoot.decode(from: fileName)
+
+		// Then
+		let unwrappedPerson = try #require(person, "Type inference should work")
+		#expect(unwrappedPerson.id == 1)
+		#expect(unwrappedPerson.name == "John Doe")
+	}
+
+	@Test("Decode from nested file successfully")
+	func decodeFromNestedFileSuccess() throws {
+		// Given
+		let fileName = "nest_content"
+
+		// When - nest_content.json has Int id, not String id
+		let person = jsonFileNested.decode(from: fileName, as: Person.self)
+
+		// Then
+		let unwrappedPerson = try #require(person, "Person should be decoded from nested path")
+		#expect(unwrappedPerson.id == 2)
+		#expect(unwrappedPerson.name == "Hana Khunlay")
+	}
+
+	@Test("Decoding with wrong type returns nil")
+	func decodeFromFileWrongType() {
+		// Given
+		let fileName = "content"
+
+		// When - Attempting to decode with wrong type (expects String id but gets Int)
+		let person = jsonFileRoot.decode(from: fileName, as: PersonWithStringId.self)
+
+		// Then
+		#expect(person == nil, "Decoding should fail with wrong type")
+	}
+
+	@Test("Decoding non-existent file returns nil")
+	func decodeFromFileNotFound() {
+		// Given
+		let fileName = "nonexistent"
+
+		// When
+		let person = jsonFileRoot.decode(from: fileName, as: Person.self)
+
+		// Then
+		#expect(person == nil, "Should return nil for non-existent file")
+	}
+
+	// MARK: - Decode Tests (Throwing Version)
+
+	@Test("Decode with throwing version successfully")
+	func decodeThrowingVersionSuccess() throws {
+		// Given
+		let fileName = "content"
+
+		// When
+		let person = try jsonFileRoot.decode(fileName: fileName, as: Person.self)
+
+		// Then
+		#expect(person.id == 1)
+		#expect(person.name == "John Doe")
+	}
+
+	@Test("Throwing decode throws error for non-existent file")
+	func decodeThrowingVersionFileNotFound() {
+		// Given
+		let fileName = "nonexistent"
+
+		// Then
+		#expect(throws: JsonFileError.self) {
+			try jsonFileRoot.decode(fileName: fileName, as: Person.self)
+		}
+	}
+
+	@Test("Throwing decode throws error when decoding fails")
+	func decodeThrowingVersionDecodingFailed() {
+		// Given
+		let fileName = "content"
+
+		// Then
+		#expect(throws: JsonFileError.self) {
+			try jsonFileRoot.decode(fileName: fileName, as: PersonWithStringId.self)
+		}
+	}
+
+	// MARK: - JSON String Tests
+
+	@Test("Convert JSON file to string successfully")
+	func jsonStringSuccess() throws {
+		// Given
+		let fileName = "content"
+
+		// When
+		let jsonString = jsonFileRoot.jsonString(from: fileName)
+
+		// Then
+		let unwrappedString = try #require(jsonString, "JSON string should be returned")
+		#expect(unwrappedString.contains("John Doe"))
+		#expect(unwrappedString.contains("id"))
+	}
+
+	@Test("Convert JSON to pretty printed string")
+	func jsonStringPrettyPrinted() throws {
+		// Given
+		let fileName = "content"
+
+		// When
+		let jsonString = jsonFileRoot.jsonString(from: fileName, prettyPrinted: true)
+
+		// Then
+		let unwrappedString = try #require(jsonString, "Pretty printed JSON string should be returned")
+		#expect(unwrappedString.contains("John Doe"))
+		#expect(unwrappedString.contains("\n"), "Pretty printed should have newlines")
+	}
+
+	@Test("JSON string returns nil for non-existent file")
+	func jsonStringFileNotFound() {
+		// Given
+		let fileName = "nonexistent"
+
+		// When
+		let jsonString = jsonFileRoot.jsonString(from: fileName)
+
+		// Then
+		#expect(jsonString == nil, "Should return nil for non-existent file")
+	}
+
+	@Test("Get JSON string from nested file")
+	func jsonStringFromNestedFile() throws {
+		// Given
+		let fileName = "nest_content"
+
+		// When
+		let jsonString = jsonFileNested.jsonString(from: fileName)
+
+		// Then
+		let unwrappedString = try #require(jsonString, "JSON string should be returned from nested path")
+		#expect(unwrappedString.contains("Hana Khunlay"))
+	}
+
+	// MARK: - Custom Decoder Tests
+
+	@Test("Use custom JSONDecoder configuration")
+	func customDecoder() throws {
+		// Given
+		let customDecoder = JSONDecoder()
+		customDecoder.keyDecodingStrategy = .convertFromSnakeCase
+		let jsonFile = JsonFile(path: "Jsons", decoder: customDecoder)
+
+		// When
+		let person = jsonFile.decode(from: "content", as: Person.self)
+
+		// Then
+		let unwrappedPerson = try #require(person, "Should work with custom decoder")
+		#expect(unwrappedPerson.id == 1)
+	}
+
+	// MARK: - Static Helper Tests
+
+	@Test("Static decode from Data")
+	func staticDecodeFromData() throws {
+		// Given
+		let jsonString = """
+			{"id": 3, "name": "Test User"}
+			"""
+		let data = try #require(jsonString.data(using: .utf8))
+
+		// When
+		let person = try JsonFile.decode(data, as: Person.self)
+
+		// Then
+		#expect(person.id == 3)
+		#expect(person.name == "Test User")
+	}
+
+	@Test("Static decode from String")
+	func staticDecodeFromString() throws {
+		// Given
+		let jsonString = """
+			{"id": 4, "name": "String User"}
+			"""
+
+		// When
+		let person = try JsonFile.decode(from: jsonString, as: Person.self)
+
+		// Then
+		#expect(person.id == 4)
+		#expect(person.name == "String User")
+	}
+
+	@Test("Static decode array from Data")
+	func staticDecodeArrayFromData() throws {
+		// Given
+		let jsonString = """
+			[{"id": 1, "name": "User 1"}, {"id": 2, "name": "User 2"}]
+			"""
+		let data = try #require(jsonString.data(using: .utf8))
+
+		// When
+		let people = try JsonFile.decodeArray(data, as: Person.self)
+
+		// Then
+		#expect(people.count == 2)
+		#expect(people[0].id == 1)
+		#expect(people[1].name == "User 2")
+	}
+
+	@Test("Static decode array from String")
+	func staticDecodeArrayFromString() throws {
+		// Given
+		let jsonString = """
+			[{"id": 5, "name": "Array User 1"}, {"id": 6, "name": "Array User 2"}]
+			"""
+
+		// When
+		let people = try JsonFile.decodeArray(from: jsonString, as: Person.self)
+
+		// Then
+		#expect(people.count == 2)
+		#expect(people[0].id == 5)
+		#expect(people[1].id == 6)
+	}
+
+	// MARK: - Error Description Tests
+
+	@Test("Error description for file not found")
+	func errorDescriptionFileNotFound() throws {
+		// Given
+		let error = JsonFileError.fileNotFound(path: "test/path.json")
+
+		// When
+		let description = error.errorDescription
+
+		// Then
+		let unwrappedDescription = try #require(description)
+		#expect(unwrappedDescription.contains("test/path.json"))
+	}
+
+	@Test("Error description for decoding failed")
+	func errorDescriptionDecodingFailed() throws {
+		// Given
+		let underlyingError = NSError(domain: "TestError", code: 1)
+		let error = JsonFileError.decodingFailed(type: "Person", error: underlyingError)
+
+		// When
+		let description = error.errorDescription
+
+		// Then
+		let unwrappedDescription = try #require(description)
+		#expect(unwrappedDescription.contains("Person"))
+	}
+
+	// MARK: - Integration Tests
+
+	@Test("Full workflow: load, decode, and verify")
+	func fullWorkflowLoadDecodeVerify() throws {
+		// Given
+		let fileName = "content"
+
+		// When - Load data
+		let data = try jsonFileRoot.data(fileName: fileName)
+
+		// Then - Verify data is not empty
+		#expect(!data.isEmpty)
+
+		// When - Decode data
+		let person = try jsonFileRoot.decode(fileName: fileName, as: Person.self)
+
+		// Then - Verify decoded data
+		#expect(person.id == 1)
+		#expect(person.name == "John Doe")
+
+		// When - Get as string
+		let jsonString = jsonFileRoot.jsonString(from: fileName)
+
+		// Then - Verify string contains expected data
+		let unwrappedString = try #require(jsonString)
+		#expect(unwrappedString.contains("John Doe"))
+	}
+
+	@Test("Load and decode from multiple paths")
+	func multipleFilesInDifferentPaths() throws {
+		// When - Load from root path
+		let rootPerson = jsonFileRoot.decode(from: "content", as: Person.self)
+
+		// Then
+		let unwrappedRootPerson = try #require(rootPerson)
+		#expect(unwrappedRootPerson.id == 1)
+		#expect(unwrappedRootPerson.name == "John Doe")
+
+		// When - Load from nested path
+		let nestedPerson = jsonFileNested.decode(from: "nest_content", as: Person.self)
+
+		// Then
+		let unwrappedNestedPerson = try #require(nestedPerson)
+		#expect(unwrappedNestedPerson.id == 2)
+		#expect(unwrappedNestedPerson.name == "Hana Khunlay")
+	}
+
+	// MARK: - Flattened Structure Tests
+
+	@Test("Access all JSON files from root level with flat instance")
+	func accessAllFilesFromRootLevel() throws {
+		// Given - All files are accessible from root due to flattened structure
+
+		// When - Load all three JSON files using jsonFileFlat
+		let content = jsonFileFlat.decode(from: "content", as: Person.self)
+		let nestContent = jsonFileFlat.decode(from: "nest_content", as: Person.self)
+		let rootContent = jsonFileFlat.decode(from: "root_content", as: Person.self)
+
+		// Then - All should be successfully decoded
+		#expect(content != nil, "content.json should be accessible")
+		#expect(nestContent != nil, "nest_content.json should be accessible")
+		#expect(rootContent != nil, "root_content.json should be accessible")
+
+		#expect(content?.id == 1)
+		#expect(nestContent?.id == 2)
+		#expect(rootContent?.id == 1)
+	}
+
+	@Test("Throwing version loads all files from root level")
+	func throwingVersionLoadsAllFiles() throws {
+		// Given
+		let jsonFile = JsonFile()
+
+		// When & Then - All files should load without throwing
+		let content = try jsonFile.decode(fileName: "content", as: Person.self)
+		#expect(content.id == 1)
+		#expect(content.name == "John Doe")
+
+		let nestContent = try jsonFile.decode(fileName: "nest_content", as: Person.self)
+		#expect(nestContent.id == 2)
+		#expect(nestContent.name == "Hana Khunlay")
+
+		let rootContent = try jsonFile.decode(fileName: "root_content", as: Person.self)
+		#expect(rootContent.id == 1)
+		#expect(rootContent.name == "John Doe")
+	}
+
+	@Test("Data loading from root level for all files")
+	func dataLoadingFromRootLevel() throws {
+		// Given
+		let jsonFile = JsonFile()
+
+		// When - Load raw data for all files
+		let contentData = try jsonFile.data(fileName: "content")
+		let nestData = try jsonFile.data(fileName: "nest_content")
+		let rootData = try jsonFile.data(fileName: "root_content")
+
+		// Then - All data should be loaded
+		#expect(!contentData.isEmpty, "content.json data should not be empty")
+		#expect(!nestData.isEmpty, "nest_content.json data should not be empty")
+		#expect(!rootData.isEmpty, "root_content.json data should not be empty")
+
+		// Verify data can be decoded
+		let decoder = JSONDecoder()
+		let contentPerson = try decoder.decode(Person.self, from: contentData)
+		let nestPerson = try decoder.decode(Person.self, from: nestData)
+		let rootPerson = try decoder.decode(Person.self, from: rootData)
+
+		#expect(contentPerson.id == 1)
+		#expect(nestPerson.id == 2)
+		#expect(rootPerson.id == 1)
+	}
+
+	@Test("JSON string from all files using flat structure")
+	func jsonStringFromAllFiles() throws {
+		// Given
+		let jsonFile = JsonFile()
+
+		// When
+		let contentString = jsonFile.jsonString(from: "content")
+		let nestString = jsonFile.jsonString(from: "nest_content")
+		let rootString = jsonFile.jsonString(from: "root_content")
+
+		// Then
+		let unwrappedContent = try #require(contentString)
+		#expect(unwrappedContent.contains("John Doe"))
+		#expect(unwrappedContent.contains("\"id\""))
+
+		let unwrappedNest = try #require(nestString)
+		#expect(unwrappedNest.contains("Hana Khunlay"))
+
+		let unwrappedRoot = try #require(rootString)
+		#expect(unwrappedRoot.contains("John Doe"))
+	}
+
+	// MARK: - Comparison Tests
+
+	@Test("Same file accessible via different JsonFile instances")
+	func sameFileAccessibleViaDifferentInstances() throws {
+		// Given - content.json should be accessible via jsonFileRoot and jsonFileFlat
+
+		// When
+		let viaRoot = jsonFileRoot.decode(from: "content", as: Person.self)
+		let viaFlat = jsonFileFlat.decode(from: "content", as: Person.self)
+
+		// Then - Both should return the same data
+		let unwrappedRoot = try #require(viaRoot, "Should load via jsonFileRoot")
+		let unwrappedFlat = try #require(viaFlat, "Should load via jsonFileFlat")
+
+		#expect(unwrappedRoot == unwrappedFlat, "Should be equal regardless of path")
+		#expect(unwrappedRoot.id == 1)
+		#expect(unwrappedFlat.id == 1)
+	}
+
+	@Test("Fallback mechanism works for files with path prefix")
+	func fallbackMechanismWorksWithPathPrefix() throws {
+		// Given - JsonFile with path prefix that doesn't exist in flattened structure
+		let jsonFileWithPath = JsonFile(path: "Jsons")
+		let jsonFileNoPath = JsonFile()
+
+		// When - Access the same file both ways
+		let withPath = jsonFileWithPath.decode(from: "content", as: Person.self)
+		let withoutPath = jsonFileNoPath.decode(from: "content", as: Person.self)
+
+		// Then - Both should succeed due to fallback
+		#expect(withPath != nil, "Should work with path due to fallback")
+		#expect(withoutPath != nil, "Should work without path")
+
+		let unwrappedWithPath = try #require(withPath)
+		let unwrappedWithoutPath = try #require(withoutPath)
+		#expect(unwrappedWithPath == unwrappedWithoutPath, "Should load the same file")
+	}
+}
