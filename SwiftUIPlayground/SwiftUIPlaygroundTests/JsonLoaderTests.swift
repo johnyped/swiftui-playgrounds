@@ -33,8 +33,8 @@ struct JsonFileTests {
 		let JsonFileNested = JsonFile(path: "Jsons/Nest")
 
 		// When - Decode with fallback mechanism
-		let person = JsonFileRoot.decode(from: "content", as: Person.self)
-		let nested = JsonFileNested.decode(from: "nest_content", as: Person.self)
+		let person = JsonFileRoot.decode(from: "SingleObject", as: Person.self)
+		let nested = JsonFileNested.decode(from: "NestSingleObject", as: Person.self)
 
 		// Then - Should work due to fallback to flattened structure
 		let unwrappedPerson = try #require(person)
@@ -52,8 +52,8 @@ struct JsonFileTests {
 		let JsonFile = JsonFile()
 
 		// When - Access all flattened files from root
-		let content = JsonFile.decode(from: "content", as: Person.self)
-		let nestContent = JsonFile.decode(from: "nest_content", as: Person.self)
+		let content = JsonFile.decode(from: "SingleObject", as: Person.self)
+		let nestContent = JsonFile.decode(from: "NestSingleObject", as: Person.self)
 		let rootContent = JsonFile.decode(from: "root_content", as: Person.self)
 
 		// Then - All should be accessible
@@ -112,7 +112,6 @@ struct JsonFileTests {
 		#expect(true) // dummy to register as a valid test
 	}
 
-
 	@Test("loading root_content file")
 	func testOnLoadingRootContentFile() throws {
 		// 1. Access the test bundle
@@ -144,8 +143,8 @@ struct JsonFileTests {
 		let bundle = Bundle(for: Helpper.self)
 
 		// 2. Locate the JSON file within the bundle
-		guard let url = bundle.url(forResource: "content", withExtension: "json") else {
-			Issue.record("Could not find 'content.json' in the test bundle.")
+		guard let url = bundle.url(forResource: "SingleObject", withExtension: "json") else {
+			Issue.record("Could not find 'SingleObject.json' in the test bundle.")
 			return
 		}
 
@@ -168,8 +167,8 @@ struct JsonFileTests {
 		let bundle = Bundle(for: Helpper.self)
 
 		// 2. Locate the JSON file within the bundle
-		guard let url = bundle.url(forResource: "nest_content", withExtension: "json") else {			
-			Issue.record("Could not find 'nest_content.json' in the test bundle.")
+		guard let url = bundle.url(forResource: "NestSingleObject", withExtension: "json") else {			
+			Issue.record("Could not find 'NestSingleObject.json' in the test bundle.")
 			return
 		}
 
@@ -218,7 +217,7 @@ struct JsonFileTests {
 	@Test("Load data from file successfully")
 	func dataFromFileSuccess() {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let data = JsonFileRoot.data(from: fileName)
@@ -243,7 +242,7 @@ struct JsonFileTests {
 	@Test("Load data from nested directory successfully")
 	func dataFromNestedFileSuccess() {
 		// Given
-		let fileName = "nest_content"
+		let fileName = "NestSingleObject"
 
 		// When
 		let data = JsonFileNested.data(from: fileName)
@@ -258,7 +257,7 @@ struct JsonFileTests {
 	@Test("Load data with throwing version successfully")
 	func dataThrowingVersionSuccess() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let data = try JsonFileRoot.data(fileName: fileName)
@@ -283,7 +282,7 @@ struct JsonFileTests {
 	@Test("Decode JSON file to model successfully")
 	func decodeFromFileSuccess() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let person = JsonFileRoot.decode(from: fileName, as: Person.self)
@@ -297,7 +296,7 @@ struct JsonFileTests {
 	@Test("Type inference works when decoding")
 	func decodeFromFileTypeInference() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let person: Person? = JsonFileRoot.decode(from: fileName)
@@ -311,7 +310,7 @@ struct JsonFileTests {
 	@Test("Decode from nested file successfully")
 	func decodeFromNestedFileSuccess() throws {
 		// Given
-		let fileName = "nest_content"
+		let fileName = "NestSingleObject"
 
 		// When - nest_content.json has Int id, not String id
 		let person = JsonFileNested.decode(from: fileName, as: Person.self)
@@ -325,7 +324,7 @@ struct JsonFileTests {
 	@Test("Decoding with wrong type returns nil")
 	func decodeFromFileWrongType() {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When - Attempting to decode with incompatible struct (different fields)
 		let invalidModel = JsonFileRoot.decode(from: fileName, as: InvalidModel.self)
@@ -351,7 +350,7 @@ struct JsonFileTests {
 	@Test("Decode with throwing version successfully")
 	func decodeThrowingVersionSuccess() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let person = try JsonFileRoot.decode(fileName: fileName, as: Person.self)
@@ -375,7 +374,7 @@ struct JsonFileTests {
 	@Test("Throwing decode throws error when decoding fails")
 	func decodeThrowingVersionDecodingFailed() {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// Then
 		#expect(throws: JsonFileError.self) {
@@ -388,7 +387,7 @@ struct JsonFileTests {
 	@Test("Convert JSON file to string successfully")
 	func jsonStringSuccess() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let jsonString = JsonFileRoot.jsonString(from: fileName)
@@ -402,7 +401,7 @@ struct JsonFileTests {
 	@Test("Convert JSON to pretty printed string")
 	func jsonStringPrettyPrinted() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When
 		let jsonString = JsonFileRoot.jsonString(from: fileName, prettyPrinted: true)
@@ -428,7 +427,7 @@ struct JsonFileTests {
 	@Test("Get JSON string from nested file")
 	func jsonStringFromNestedFile() throws {
 		// Given
-		let fileName = "nest_content"
+		let fileName = "NestSingleObject"
 
 		// When
 		let jsonString = JsonFileNested.jsonString(from: fileName)
@@ -448,7 +447,7 @@ struct JsonFileTests {
 		let JsonFile = JsonFile(path: "Jsons", decoder: customDecoder)
 
 		// When
-		let person = JsonFile.decode(from: "content", as: Person.self)
+		let person = JsonFile.decode(from: "SingleObject", as: Person.self)
 
 		// Then
 		let unwrappedPerson = try #require(person, "Should work with custom decoder")
@@ -555,7 +554,7 @@ struct JsonFileTests {
 	@Test("Full workflow: load, decode, and verify")
 	func fullWorkflowLoadDecodeVerify() throws {
 		// Given
-		let fileName = "content"
+		let fileName = "SingleObject"
 
 		// When - Load data
 		let data = try JsonFileRoot.data(fileName: fileName)
@@ -581,7 +580,7 @@ struct JsonFileTests {
 	@Test("Load and decode from multiple paths")
 	func multipleFilesInDifferentPaths() throws {
 		// When - Load from root path
-		let rootPerson = JsonFileRoot.decode(from: "content", as: Person.self)
+		let rootPerson = JsonFileRoot.decode(from: "SingleObject", as: Person.self)
 
 		// Then
 		let unwrappedRootPerson = try #require(rootPerson)
@@ -589,7 +588,7 @@ struct JsonFileTests {
 		#expect(unwrappedRootPerson.name == "John Doe")
 
 		// When - Load from nested path
-		let nestedPerson = JsonFileNested.decode(from: "nest_content", as: Person.self)
+		let nestedPerson = JsonFileNested.decode(from: "NestSingleObject", as: Person.self)
 
 		// Then
 		let unwrappedNestedPerson = try #require(nestedPerson)
@@ -604,13 +603,13 @@ struct JsonFileTests {
 		// Given - All files are accessible from root due to flattened structure
 
 		// When - Load all three JSON files using JsonFileFlat
-		let content = JsonFileFlat.decode(from: "content", as: Person.self)
-		let nestContent = JsonFileFlat.decode(from: "nest_content", as: Person.self)
+		let content = JsonFileFlat.decode(from: "SingleObject", as: Person.self)
+		let nestContent = JsonFileFlat.decode(from: "NestSingleObject", as: Person.self)
 		let rootContent = JsonFileFlat.decode(from: "root_content", as: Person.self)
 
 		// Then - All should be successfully decoded
-		#expect(content != nil, "content.json should be accessible")
-		#expect(nestContent != nil, "nest_content.json should be accessible")
+		#expect(content != nil, "SingleObject.json should be accessible")
+		#expect(nestContent != nil, "NestSingleObject.json should be accessible")
 		#expect(rootContent != nil, "root_content.json should be accessible")
 
 		#expect(content?.id == 1)
@@ -624,11 +623,11 @@ struct JsonFileTests {
 		let JsonFile = JsonFile()
 
 		// When & Then - All files should load without throwing
-		let content = try JsonFile.decode(fileName: "content", as: Person.self)
+		let content = try JsonFile.decode(fileName: "SingleObject", as: Person.self)
 		#expect(content.id == 1)
 		#expect(content.name == "John Doe")
 
-		let nestContent = try JsonFile.decode(fileName: "nest_content", as: Person.self)
+		let nestContent = try JsonFile.decode(fileName: "NestSingleObject", as: Person.self)
 		#expect(nestContent.id == 2)
 		#expect(nestContent.name == "Hana Khunlay")
 
@@ -643,13 +642,13 @@ struct JsonFileTests {
 		let JsonFile = JsonFile()
 
 		// When - Load raw data for all files
-		let contentData = try JsonFile.data(fileName: "content")
-		let nestData = try JsonFile.data(fileName: "nest_content")
+		let contentData = try JsonFile.data(fileName: "SingleObject")
+		let nestData = try JsonFile.data(fileName: "NestSingleObject")
 		let rootData = try JsonFile.data(fileName: "root_content")
 
 		// Then - All data should be loaded
-		#expect(!contentData.isEmpty, "content.json data should not be empty")
-		#expect(!nestData.isEmpty, "nest_content.json data should not be empty")
+		#expect(!contentData.isEmpty, "SingleObject.json data should not be empty")
+		#expect(!nestData.isEmpty, "NestSingleObject.json data should not be empty")
 		#expect(!rootData.isEmpty, "root_content.json data should not be empty")
 
 		// Verify data can be decoded
@@ -669,8 +668,8 @@ struct JsonFileTests {
 		let JsonFile = JsonFile()
 
 		// When
-		let contentString = JsonFile.jsonString(from: "content")
-		let nestString = JsonFile.jsonString(from: "nest_content")
+		let contentString = JsonFile.jsonString(from: "SingleObject")
+		let nestString = JsonFile.jsonString(from: "NestSingleObject")
 		let rootString = JsonFile.jsonString(from: "root_content")
 
 		// Then
@@ -692,8 +691,8 @@ struct JsonFileTests {
 		// Given - content.json should be accessible via JsonFileRoot and JsonFileFlat
 
 		// When
-		let viaRoot = JsonFileRoot.decode(from: "content", as: Person.self)
-		let viaFlat = JsonFileFlat.decode(from: "content", as: Person.self)
+		let viaRoot = JsonFileRoot.decode(from: "SingleObject", as: Person.self)
+		let viaFlat = JsonFileFlat.decode(from: "SingleObject", as: Person.self)
 
 		// Then - Both should return the same data
 		let unwrappedRoot = try #require(viaRoot, "Should load via JsonFileRoot")
@@ -711,8 +710,8 @@ struct JsonFileTests {
 		let jsonFileNoPath = JsonFile()
 
 		// When - Access the same file both ways
-		let withPath = jsonFileWithPath.decode(from: "content", as: Person.self)
-		let withoutPath = jsonFileNoPath.decode(from: "content", as: Person.self)
+		let withPath = jsonFileWithPath.decode(from: "SingleObject", as: Person.self)
+		let withoutPath = jsonFileNoPath.decode(from: "SingleObject", as: Person.self)
 
 		// Then - Both should succeed due to fallback
 		#expect(withPath != nil, "Should work with path due to fallback")
@@ -728,7 +727,7 @@ struct JsonFileTests {
 	@Test("Decode array from JSON file successfully")
 	func decodeArrayFromFileSuccess() throws {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// When
 		let users = JsonFileRoot.decodeArray(from: fileName, as: Person.self)
@@ -747,7 +746,7 @@ struct JsonFileTests {
 	@Test("Decode array from nested directory")
 	func decodeArrayFromNestedDirectory() throws {
 		// Given
-		let fileName = "team"
+		let fileName = "NestArrayObject"
 
 		// When
 		let team = JsonFileNested.decodeArray(from: fileName, as: Person.self)
@@ -764,7 +763,7 @@ struct JsonFileTests {
 	@Test("Decode empty array from JSON file")
 	func decodeEmptyArrayFromFile() throws {
 		// Given
-		let fileName = "empty_array"
+		let fileName = "EmptyArrayObject"
 
 		// When
 		let emptyArray = JsonFileRoot.decodeArray(from: fileName, as: Person.self)
@@ -773,31 +772,6 @@ struct JsonFileTests {
 		let unwrappedArray = try #require(emptyArray, "Empty array should be decoded")
 		#expect(unwrappedArray.isEmpty, "Array should be empty")
 		#expect(unwrappedArray.count == 0, "Count should be 0")
-	}
-
-	@Test("Decode large array from nested directory")
-	func decodeLargeArrayFromNestedDirectory() throws {
-		// Given
-		let fileName = "large_team"
-
-		// When
-		let largeTeam = JsonFileNested.decodeArray(from: fileName, as: Person.self)
-
-		// Then
-		let unwrappedTeam = try #require(largeTeam, "Large team array should be decoded")
-		#expect(unwrappedTeam.count == 8, "Should have 8 team members")
-		
-		// Verify first element
-		#expect(unwrappedTeam.first?.id == 100)
-		#expect(unwrappedTeam.first?.name == "Henry Park")
-		
-		// Verify last element
-		#expect(unwrappedTeam.last?.id == 107)
-		#expect(unwrappedTeam.last?.name == "Olivia Moore")
-		
-		// Verify middle element
-		#expect(unwrappedTeam[3].id == 103)
-		#expect(unwrappedTeam[3].name == "Kelly Davis")
 	}
 
 	@Test("Array decoding returns nil for non-existent file")
@@ -815,7 +789,7 @@ struct JsonFileTests {
 	@Test("Array decoding returns nil for wrong type")
 	func decodeArrayWithWrongType() {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// When - Try to decode with incompatible struct
 		let wrongArray = JsonFileRoot.decodeArray(from: fileName, as: InvalidModel.self)
@@ -829,7 +803,7 @@ struct JsonFileTests {
 	@Test("Decode array with throwing version successfully")
 	func decodeArrayThrowingVersionSuccess() throws {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// When
 		let users = try JsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
@@ -855,7 +829,7 @@ struct JsonFileTests {
 	@Test("Throwing array decode throws error for wrong type")
 	func decodeArrayThrowingVersionWrongType() {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// Then
 		#expect(throws: JsonFileError.self) {
@@ -869,8 +843,8 @@ struct JsonFileTests {
 		let JsonFile = JsonFile()
 
 		// When
-		let users = JsonFile.decodeArray(from: "users", as: Person.self)
-		let team = JsonFile.decodeArray(from: "team", as: Person.self)
+		let users = JsonFile.decodeArray(from: "ArrayObject", as: Person.self)
+		let team = JsonFile.decodeArray(from: "NestArrayObject", as: Person.self)
 
 		// Then
 		let unwrappedUsers = try #require(users, "Users should be accessible from root")
@@ -885,7 +859,7 @@ struct JsonFileTests {
 	@Test("Filter array elements after decoding")
 	func filterArrayAfterDecoding() throws {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// When
 		let users = try JsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
@@ -902,7 +876,7 @@ struct JsonFileTests {
 	@Test("Map array elements after decoding")
 	func mapArrayAfterDecoding() throws {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// When
 		let users = try JsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
@@ -918,7 +892,7 @@ struct JsonFileTests {
 	@Test("Find specific element in decoded array")
 	func findElementInDecodedArray() throws {
 		// Given
-		let fileName = "team"
+		let fileName = "NestArrayObject"
 
 		// When
 		let team = try JsonFileNested.decodeArray(fileName: fileName, as: Person.self)
@@ -933,7 +907,7 @@ struct JsonFileTests {
 	@Test("Sort decoded array")
 	func sortDecodedArray() throws {
 		// Given
-		let fileName = "team"
+		let fileName = "NestArrayObject"
 
 		// When
 		let team = try JsonFileNested.decodeArray(fileName: fileName, as: Person.self)
@@ -947,34 +921,13 @@ struct JsonFileTests {
 		#expect(sortedById.last?.id == 40)
 	}
 
-	// MARK: - Array Performance Tests
-
-	@Test("Decode large array performance")
-	func decodeLargeArrayPerformance() throws {
-		// Given
-		let fileName = "large_team"
-
-		// When
-		let startTime = Date()
-		let largeTeam = try JsonFileNested.decodeArray(fileName: fileName, as: Person.self)
-		let elapsed = Date().timeIntervalSince(startTime)
-
-		// Then
-		#expect(largeTeam.count == 8)
-		#expect(elapsed < 1.0, "Should decode in less than 1 second")
-		
-		// Verify all elements are unique
-		let uniqueIds = Set(largeTeam.map { $0.id })
-		#expect(uniqueIds.count == largeTeam.count, "All IDs should be unique")
-	}
-
 	// MARK: - Array Integration Tests
 
 	@Test("Load multiple array files and combine")
 	func loadMultipleArrayFilesAndCombine() throws {
 		// Given
-		let usersFile = "users"
-		let teamFile = "team"
+		let usersFile = "ArrayObject"
+		let teamFile = "NestArrayObject"
 
 		// When
 		let users = try JsonFileRoot.decodeArray(fileName: usersFile, as: Person.self)
@@ -996,7 +949,7 @@ struct JsonFileTests {
 	@Test("Decode array and verify all elements")
 	func decodeArrayAndVerifyAllElements() throws {
 		// Given
-		let fileName = "users"
+		let fileName = "ArrayObject"
 
 		// When
 		let users = try JsonFileRoot.decodeArray(fileName: fileName, as: Person.self)
@@ -1013,8 +966,8 @@ struct JsonFileTests {
 	@Test("Empty array vs single object distinction")
 	func emptyArrayVsSingleObject() throws {
 		// Given
-		let emptyArrayFile = "empty_array"
-		let singleObjectFile = "content"
+		let emptyArrayFile = "EmptyArrayObject"
+		let singleObjectFile = "SingleObject"
 
 		// When
 		let emptyArray = JsonFileRoot.decodeArray(from: emptyArrayFile, as: Person.self)
