@@ -150,231 +150,907 @@ class TVOSScrollableContentViewModel: ObservableObject {
     private func generateAttributedText() -> AttributedString {
         var result = AttributedString()
         
-        // Title - Large, Bold, Colored
-        var title = AttributedString("tvOS AttributedString Demo\n\n")
-        title.font = .system(size: 48, weight: .bold)
+        // Main Title
+        var title = AttributedString("tvOS AttributedString Showcase\n\n")
+        title.font = .system(size: 52, weight: .black)
         title.foregroundColor = .cyan
         result.append(title)
         
-        // Subtitle - Medium, Italic
-        var subtitle = AttributedString("Demonstrating Rich Text Formatting\n\n")
+        // Subtitle
+        var subtitle = AttributedString("A Comprehensive Guide to Rich Text Formatting on Apple TV\n\n")
         subtitle.font = .system(size: 36, weight: .medium).italic()
         subtitle.foregroundColor = .yellow
         result.append(subtitle)
         
-        // Section 1
-        var section1Title = AttributedString("Introduction\n")
-        section1Title.font = .system(size: 38, weight: .semibold)
+        // SECTION 1: Introduction
+        var section1Title = AttributedString("📱 Introduction to AttributedStrings\n")
+        section1Title.font = .system(size: 40, weight: .bold)
         section1Title.foregroundColor = .green
         result.append(section1Title)
         
-        var section1Body = AttributedString("Welcome to the world of ")
-        section1Body.font = .system(size: 32)
-        section1Body.foregroundColor = .white
-        result.append(section1Body)
+        var intro1 = AttributedString("Welcome to the comprehensive world of ")
+        intro1.font = .system(size: 32)
+        intro1.foregroundColor = .white
+        result.append(intro1)
         
-        var boldText = AttributedString("attributed strings")
-        boldText.font = .system(size: 32, weight: .bold)
-        boldText.foregroundColor = .orange
-        result.append(boldText)
+        var intro1Bold = AttributedString("attributed strings")
+        intro1Bold.font = .system(size: 32, weight: .bold)
+        intro1Bold.foregroundColor = .orange
+        result.append(intro1Bold)
         
-        var section1Body2 = AttributedString(" where you can mix and match different text styles, colors, and formatting within a single text view. This enables ")
-        section1Body2.font = .system(size: 32)
-        section1Body2.foregroundColor = .white
-        result.append(section1Body2)
+        var intro2 = AttributedString(" in SwiftUI! This powerful feature allows you to create ")
+        intro2.font = .system(size: 32)
+        intro2.foregroundColor = .white
+        result.append(intro2)
         
-        var italicText = AttributedString("rich typography")
-        italicText.font = .system(size: 32).italic()
-        italicText.foregroundColor = .pink
-        result.append(italicText)
+        var intro2Italic = AttributedString("stunning, dynamic text")
+        intro2Italic.font = .system(size: 32).italic()
+        intro2Italic.foregroundColor = .pink
+        result.append(intro2Italic)
         
-        var section1Body3 = AttributedString(" and enhanced readability.\n\n")
-        section1Body3.font = .system(size: 32)
-        section1Body3.foregroundColor = .white
-        result.append(section1Body3)
+        var intro3 = AttributedString(" with multiple styles, colors, and formatting options all within a single text view.\n\n")
+        intro3.font = .system(size: 32)
+        intro3.foregroundColor = .white
+        result.append(intro3)
         
-        // Section 2
-        var section2Title = AttributedString("Styling Capabilities\n")
-        section2Title.font = .system(size: 38, weight: .semibold)
+        var intro4 = AttributedString("Unlike traditional plain text, attributed strings give you ")
+        intro4.font = .system(size: 32)
+        intro4.foregroundColor = .white
+        result.append(intro4)
+        
+        var intro4Emphasis = AttributedString("pixel-perfect control")
+        intro4Emphasis.font = .system(size: 34, weight: .heavy)
+        intro4Emphasis.foregroundColor = .red
+        result.append(intro4Emphasis)
+        
+        var intro5 = AttributedString(" over every character, word, and paragraph. This enables rich typography, enhanced readability, and beautiful visual presentations that capture your users' attention.\n\n")
+        intro5.font = .system(size: 32)
+        intro5.foregroundColor = .white
+        result.append(intro5)
+        
+        // SECTION 2: Text Styling Features
+        var section2Title = AttributedString("🎨 Text Styling Features\n")
+        section2Title.font = .system(size: 40, weight: .bold)
         section2Title.foregroundColor = .green
         result.append(section2Title)
         
-        var section2Body = AttributedString("You can create ")
-        section2Body.font = .system(size: 32)
-        section2Body.foregroundColor = .white
-        result.append(section2Body)
+        var styling1 = AttributedString("With AttributedString, you can effortlessly create ")
+        styling1.font = .system(size: 32)
+        styling1.foregroundColor = .white
+        result.append(styling1)
         
-        var coloredText1 = AttributedString("colored text")
-        coloredText1.font = .system(size: 32)
-        coloredText1.foregroundColor = .red
-        result.append(coloredText1)
+        var coloredWord = AttributedString("colored")
+        coloredWord.font = .system(size: 32)
+        coloredWord.foregroundColor = .red
+        result.append(coloredWord)
         
-        var separator1 = AttributedString(", ")
-        separator1.font = .system(size: 32)
-        separator1.foregroundColor = .white
-        result.append(separator1)
+        var comma1 = AttributedString(" text, ")
+        comma1.font = .system(size: 32)
+        comma1.foregroundColor = .white
+        result.append(comma1)
         
-        var boldText2 = AttributedString("bold text")
-        boldText2.font = .system(size: 32, weight: .bold)
-        boldText2.foregroundColor = .white
-        result.append(boldText2)
+        var boldWord = AttributedString("bold")
+        boldWord.font = .system(size: 32, weight: .bold)
+        boldWord.foregroundColor = .white
+        result.append(boldWord)
         
-        var separator2 = AttributedString(", ")
-        separator2.font = .system(size: 32)
-        separator2.foregroundColor = .white
-        result.append(separator2)
+        var comma2 = AttributedString(" text, ")
+        comma2.font = .system(size: 32)
+        comma2.foregroundColor = .white
+        result.append(comma2)
         
-        var italicText2 = AttributedString("italic text")
-        italicText2.font = .system(size: 32).italic()
-        italicText2.foregroundColor = .white
-        result.append(italicText2)
+        var italicWord = AttributedString("italic")
+        italicWord.font = .system(size: 32).italic()
+        italicWord.foregroundColor = .white
+        result.append(italicWord)
         
-        var separator3 = AttributedString(", and even ")
-        separator3.font = .system(size: 32)
-        separator3.foregroundColor = .white
-        result.append(separator3)
+        var comma3 = AttributedString(" text, ")
+        comma3.font = .system(size: 32)
+        comma3.foregroundColor = .white
+        result.append(comma3)
         
-        var largeText = AttributedString("LARGE TEXT")
-        largeText.font = .system(size: 44, weight: .heavy)
-        largeText.foregroundColor = .purple
-        result.append(largeText)
+        var largeWord = AttributedString("LARGE")
+        largeWord.font = .system(size: 44, weight: .heavy)
+        largeWord.foregroundColor = .purple
+        result.append(largeWord)
         
-        var section2End = AttributedString(" or ")
-        section2End.font = .system(size: 32)
-        section2End.foregroundColor = .white
-        result.append(section2End)
+        var comma4 = AttributedString(" text, ")
+        comma4.font = .system(size: 32)
+        comma4.foregroundColor = .white
+        result.append(comma4)
         
-        var smallText = AttributedString("small text")
-        smallText.font = .system(size: 24)
-        smallText.foregroundColor = .gray
-        result.append(smallText)
+        var smallWord = AttributedString("small")
+        smallWord.font = .system(size: 24)
+        smallWord.foregroundColor = .gray
+        result.append(smallWord)
         
-        var section2End2 = AttributedString(" all in the same paragraph.\n\n")
-        section2End2.font = .system(size: 32)
-        section2End2.foregroundColor = .white
-        result.append(section2End2)
+        var comma5 = AttributedString(" text, and even ")
+        comma5.font = .system(size: 32)
+        comma5.foregroundColor = .white
+        result.append(comma5)
         
-        // Section 3
-        var section3Title = AttributedString("Color Palette Examples\n")
-        section3Title.font = .system(size: 38, weight: .semibold)
+        var combinedWord = AttributedString("combined styles")
+        combinedWord.font = .system(size: 36, weight: .bold).italic()
+        combinedWord.foregroundColor = .cyan
+        result.append(combinedWord)
+        
+        var styling2 = AttributedString(" all in one paragraph!\n\n")
+        styling2.font = .system(size: 32)
+        styling2.foregroundColor = .white
+        result.append(styling2)
+        
+        // SECTION 3: Color Spectrum
+        var section3Title = AttributedString("🌈 Full Color Spectrum\n")
+        section3Title.font = .system(size: 40, weight: .bold)
         section3Title.foregroundColor = .green
         result.append(section3Title)
         
-        let colors: [(String, Color)] = [
-            ("Red", .red),
-            ("Orange", .orange),
-            ("Yellow", .yellow),
-            ("Green", .green),
-            ("Blue", .blue),
-            ("Purple", .purple),
-            ("Pink", .pink),
-            ("Cyan", .cyan)
+        let colorPairs: [(String, Color)] = [
+            ("Red", .red), ("Orange", .orange), ("Yellow", .yellow),
+            ("Green", .green), ("Blue", .blue), ("Indigo", .indigo),
+            ("Purple", .purple), ("Pink", .pink), ("Cyan", .cyan),
+            ("Mint", .mint), ("Teal", .teal), ("Brown", .brown)
         ]
         
-        for (index, colorPair) in colors.enumerated() {
+        for (index, colorPair) in colorPairs.enumerated() {
             var colorText = AttributedString(colorPair.0)
             colorText.font = .system(size: 32, weight: .semibold)
             colorText.foregroundColor = colorPair.1
             result.append(colorText)
             
-            if index < colors.count - 1 {
+            if index < colorPairs.count - 1 {
                 var separator = AttributedString(" • ")
                 separator.font = .system(size: 32)
                 separator.foregroundColor = .white
                 result.append(separator)
             }
         }
+        result.append(AttributedString("\n\n"))
         
-        let section3End = AttributedString("\n\n")
-        result.append(section3End)
-        
-        // Section 4 - Mixed formatting
-        var section4Title = AttributedString("Mixed Formatting Example\n")
-        section4Title.font = .system(size: 38, weight: .semibold)
+        // SECTION 4: Typography Weights
+        var section4Title = AttributedString("⚖️ Font Weight Variations\n")
+        section4Title.font = .system(size: 40, weight: .bold)
         section4Title.foregroundColor = .green
         result.append(section4Title)
         
-        var mixedText = AttributedString("In this paragraph, we demonstrate ")
-        mixedText.font = .system(size: 32)
-        mixedText.foregroundColor = .white
-        result.append(mixedText)
+        var weight1 = AttributedString("Ultralight • ")
+        weight1.font = .system(size: 32, weight: .ultraLight)
+        weight1.foregroundColor = .white
+        result.append(weight1)
         
-        var emphasis1 = AttributedString("multiple")
-        emphasis1.font = .system(size: 32, weight: .bold)
-        emphasis1.foregroundColor = .orange
-        result.append(emphasis1)
+        var weight2 = AttributedString("Thin • ")
+        weight2.font = .system(size: 32, weight: .thin)
+        weight2.foregroundColor = .white
+        result.append(weight2)
         
-        var mixedText2 = AttributedString(" different ")
-        mixedText2.font = .system(size: 32)
-        mixedText2.foregroundColor = .white
-        result.append(mixedText2)
+        var weight3 = AttributedString("Light • ")
+        weight3.font = .system(size: 32, weight: .light)
+        weight3.foregroundColor = .white
+        result.append(weight3)
         
-        var emphasis2 = AttributedString("styles")
-        emphasis2.font = .system(size: 32).italic()
-        emphasis2.foregroundColor = .cyan
-        result.append(emphasis2)
+        var weight4 = AttributedString("Regular • ")
+        weight4.font = .system(size: 32, weight: .regular)
+        weight4.foregroundColor = .white
+        result.append(weight4)
         
-        var mixedText3 = AttributedString(" within the ")
-        mixedText3.font = .system(size: 32)
-        mixedText3.foregroundColor = .white
-        result.append(mixedText3)
+        var weight5 = AttributedString("Medium • ")
+        weight5.font = .system(size: 32, weight: .medium)
+        weight5.foregroundColor = .white
+        result.append(weight5)
         
-        var emphasis3 = AttributedString("same")
-        emphasis3.font = .system(size: 36, weight: .heavy)
-        emphasis3.foregroundColor = .red
-        result.append(emphasis3)
+        var weight6 = AttributedString("Semibold • ")
+        weight6.font = .system(size: 32, weight: .semibold)
+        weight6.foregroundColor = .white
+        result.append(weight6)
         
-        var mixedText4 = AttributedString(" sentence. This creates ")
-        mixedText4.font = .system(size: 32)
-        mixedText4.foregroundColor = .white
-        result.append(mixedText4)
+        var weight7 = AttributedString("Bold • ")
+        weight7.font = .system(size: 32, weight: .bold)
+        weight7.foregroundColor = .white
+        result.append(weight7)
         
-        var emphasis4 = AttributedString("visual hierarchy")
-        emphasis4.font = .system(size: 32, weight: .semibold)
-        emphasis4.foregroundColor = .yellow
-        result.append(emphasis4)
+        var weight8 = AttributedString("Heavy • ")
+        weight8.font = .system(size: 32, weight: .heavy)
+        weight8.foregroundColor = .white
+        result.append(weight8)
         
-        var mixedText5 = AttributedString(" and helps ")
-        mixedText5.font = .system(size: 32)
-        mixedText5.foregroundColor = .white
-        result.append(mixedText5)
+        var weight9 = AttributedString("Black")
+        weight9.font = .system(size: 32, weight: .black)
+        weight9.foregroundColor = .white
+        result.append(weight9)
         
-        var emphasis5 = AttributedString("important information")
-        emphasis5.font = .system(size: 32, weight: .bold).italic()
-        emphasis5.foregroundColor = .pink
-        result.append(emphasis5)
+        result.append(AttributedString("\n\n"))
         
-        var mixedText6 = AttributedString(" stand out to readers.\n\n")
-        mixedText6.font = .system(size: 32)
-        mixedText6.foregroundColor = .white
-        result.append(mixedText6)
+        // SECTION 5: Advanced Formatting
+        var section5Title = AttributedString("✨ Advanced Formatting Techniques\n")
+        section5Title.font = .system(size: 40, weight: .bold)
+        section5Title.foregroundColor = .green
+        result.append(section5Title)
         
-        // Additional paragraphs with mixed formatting
-        var para1 = AttributedString("SwiftUI's AttributedString API provides a type-safe way to create rich text. Unlike NSAttributedString, it uses Swift's modern syntax and value semantics, making it easier to work with and less error-prone.\n\n")
-        para1.font = .system(size: 32)
-        para1.foregroundColor = .white
-        result.append(para1)
+        var advanced1 = AttributedString("In this advanced section, we explore ")
+        advanced1.font = .system(size: 32)
+        advanced1.foregroundColor = .white
+        result.append(advanced1)
         
-        var highlightText = AttributedString("Important: ")
-        highlightText.font = .system(size: 32, weight: .bold)
-        highlightText.foregroundColor = .red
-        result.append(highlightText)
+        var advanced1a = AttributedString("complex")
+        advanced1a.font = .system(size: 32, weight: .bold)
+        advanced1a.foregroundColor = .orange
+        result.append(advanced1a)
         
-        var para2 = AttributedString("On tvOS, text formatting must be carefully considered for readability on large screens viewed from a distance. Appropriate font sizes, weights, and colors ensure the best user experience.\n\n")
-        para2.font = .system(size: 32)
-        para2.foregroundColor = .white
-        result.append(para2)
+        var advanced2 = AttributedString(" text compositions that combine ")
+        advanced2.font = .system(size: 32)
+        advanced2.foregroundColor = .white
+        result.append(advanced2)
         
-        var para3 = AttributedString("This scrolling implementation works seamlessly with both plain and attributed text, demonstrating the flexibility of the SwiftUI framework and the power of proper architecture using ViewModels.\n\n")
-        para3.font = .system(size: 32)
-        para3.foregroundColor = .white
-        result.append(para3)
+        var advanced2a = AttributedString("multiple")
+        advanced2a.font = .system(size: 34).italic()
+        advanced2a.foregroundColor = .cyan
+        result.append(advanced2a)
+        
+        var advanced3 = AttributedString(" attributes within the ")
+        advanced3.font = .system(size: 32)
+        advanced3.foregroundColor = .white
+        result.append(advanced3)
+        
+        var advanced3a = AttributedString("SAME")
+        advanced3a.font = .system(size: 38, weight: .heavy)
+        advanced3a.foregroundColor = .red
+        result.append(advanced3a)
+        
+        var advanced4 = AttributedString(" sentence. This creates ")
+        advanced4.font = .system(size: 32)
+        advanced4.foregroundColor = .white
+        result.append(advanced4)
+        
+        var advanced4a = AttributedString("visual hierarchy")
+        advanced4a.font = .system(size: 32, weight: .semibold)
+        advanced4a.foregroundColor = .yellow
+        result.append(advanced4a)
+        
+        var advanced5 = AttributedString(" and draws attention to ")
+        advanced5.font = .system(size: 32)
+        advanced5.foregroundColor = .white
+        result.append(advanced5)
+        
+        var advanced5a = AttributedString("key concepts")
+        advanced5a.font = .system(size: 32, weight: .bold).italic()
+        advanced5a.foregroundColor = .pink
+        result.append(advanced5a)
+        
+        var advanced6 = AttributedString(" that readers should remember.\n\n")
+        advanced6.font = .system(size: 32)
+        advanced6.foregroundColor = .white
+        result.append(advanced6)
+        
+        // SECTION 6: SwiftUI Integration
+        var section6Title = AttributedString("🔧 SwiftUI Integration\n")
+        section6Title.font = .system(size: 40, weight: .bold)
+        section6Title.foregroundColor = .green
+        result.append(section6Title)
+        
+        var swiftui1 = AttributedString("SwiftUI's AttributedString API provides a ")
+        swiftui1.font = .system(size: 32)
+        swiftui1.foregroundColor = .white
+        result.append(swiftui1)
+        
+        var swiftui1a = AttributedString("type-safe")
+        swiftui1a.font = .system(size: 32, weight: .bold)
+        swiftui1a.foregroundColor = .orange
+        result.append(swiftui1a)
+        
+        var swiftui2 = AttributedString(" way to create rich text. Unlike ")
+        swiftui2.font = .system(size: 32)
+        swiftui2.foregroundColor = .white
+        result.append(swiftui2)
+        
+        var swiftui2a = AttributedString("NSAttributedString")
+        swiftui2a.font = .system(size: 30, weight: .medium)
+        swiftui2a.foregroundColor = .gray
+        result.append(swiftui2a)
+        
+        var swiftui3 = AttributedString(", it uses Swift's modern syntax and ")
+        swiftui3.font = .system(size: 32)
+        swiftui3.foregroundColor = .white
+        result.append(swiftui3)
+        
+        var swiftui3a = AttributedString("value semantics")
+        swiftui3a.font = .system(size: 32).italic()
+        swiftui3a.foregroundColor = .cyan
+        result.append(swiftui3a)
+        
+        var swiftui4 = AttributedString(", making it easier to work with and significantly less error-prone than traditional approaches.\n\n")
+        swiftui4.font = .system(size: 32)
+        swiftui4.foregroundColor = .white
+        result.append(swiftui4)
+        
+        var swiftui5 = AttributedString("The framework seamlessly integrates with SwiftUI's ")
+        swiftui5.font = .system(size: 32)
+        swiftui5.foregroundColor = .white
+        result.append(swiftui5)
+        
+        var swiftui5a = AttributedString("declarative")
+        swiftui5a.font = .system(size: 32, weight: .semibold)
+        swiftui5a.foregroundColor = .purple
+        result.append(swiftui5a)
+        
+        var swiftui6 = AttributedString(" syntax, allowing developers to compose complex text layouts with minimal code.\n\n")
+        swiftui6.font = .system(size: 32)
+        swiftui6.foregroundColor = .white
+        result.append(swiftui6)
+        
+        // SECTION 7: tvOS Considerations
+        var section7Title = AttributedString("📺 tvOS Design Considerations\n")
+        section7Title.font = .system(size: 40, weight: .bold)
+        section7Title.foregroundColor = .green
+        result.append(section7Title)
+        
+        var tvos1 = AttributedString("Note: ")
+        tvos1.font = .system(size: 32, weight: .bold)
+        tvos1.foregroundColor = .red
+        result.append(tvos1)
+        
+        var tvos2 = AttributedString("On tvOS, text formatting must be carefully considered for readability on ")
+        tvos2.font = .system(size: 32)
+        tvos2.foregroundColor = .white
+        result.append(tvos2)
+        
+        var tvos2a = AttributedString("large screens")
+        tvos2a.font = .system(size: 34, weight: .bold)
+        tvos2a.foregroundColor = .yellow
+        result.append(tvos2a)
+        
+        var tvos3 = AttributedString(" viewed from a distance. Appropriate font sizes (typically ")
+        tvos3.font = .system(size: 32)
+        tvos3.foregroundColor = .white
+        result.append(tvos3)
+        
+        var tvos3a = AttributedString("28-48pt")
+        tvos3a.font = .system(size: 32, weight: .semibold)
+        tvos3a.foregroundColor = .cyan
+        result.append(tvos3a)
+        
+        var tvos4 = AttributedString("), sufficient weights, and high-contrast colors ensure the best user experience.\n\n")
+        tvos4.font = .system(size: 32)
+        tvos4.foregroundColor = .white
+        result.append(tvos4)
+        
+        var tvos5 = AttributedString("The living room environment presents unique challenges: varying lighting conditions, different viewing distances (typically ")
+        tvos5.font = .system(size: 32)
+        tvos5.foregroundColor = .white
+        result.append(tvos5)
+        
+        var tvos5a = AttributedString("8-12 feet")
+        tvos5a.font = .system(size: 32).italic()
+        tvos5a.foregroundColor = .orange
+        result.append(tvos5a)
+        
+        var tvos6 = AttributedString("), and diverse screen sizes ranging from modest 40-inch displays to expansive 85-inch home theaters.\n\n")
+        tvos6.font = .system(size: 32)
+        tvos6.foregroundColor = .white
+        result.append(tvos6)
+        
+        // SECTION 8: Performance Tips
+        var section8Title = AttributedString("⚡ Performance Optimization\n")
+        section8Title.font = .system(size: 40, weight: .bold)
+        section8Title.foregroundColor = .green
+        result.append(section8Title)
+        
+        var perf1 = AttributedString("Performance optimization becomes ")
+        perf1.font = .system(size: 32)
+        perf1.foregroundColor = .white
+        result.append(perf1)
+        
+        var perf1a = AttributedString("critically important")
+        perf1a.font = .system(size: 32, weight: .bold)
+        perf1a.foregroundColor = .red
+        result.append(perf1a)
+        
+        var perf2 = AttributedString(" when dealing with long scrolling content like this demonstration. Efficient rendering, careful state management, and proper view hierarchy design ensure that applications remain ")
+        perf2.font = .system(size: 32)
+        perf2.foregroundColor = .white
+        result.append(perf2)
+        
+        var perf2a = AttributedString("responsive")
+        perf2a.font = .system(size: 32).italic()
+        perf2a.foregroundColor = .green
+        result.append(perf2a)
+        
+        var perf3 = AttributedString(" even with substantial amounts of styled text.\n\n")
+        perf3.font = .system(size: 32)
+        perf3.foregroundColor = .white
+        result.append(perf3)
+        
+        var perf4 = AttributedString("Key strategies include: using ")
+        perf4.font = .system(size: 32)
+        perf4.foregroundColor = .white
+        result.append(perf4)
+        
+        var perf4a = AttributedString("lazy loading")
+        perf4a.font = .system(size: 32, weight: .semibold)
+        perf4a.foregroundColor = .yellow
+        result.append(perf4a)
+        
+        var perf5 = AttributedString(" for content, minimizing ")
+        perf5.font = .system(size: 32)
+        perf5.foregroundColor = .white
+        result.append(perf5)
+        
+        var perf5a = AttributedString("view redraws")
+        perf5a.font = .system(size: 32, weight: .semibold)
+        perf5a.foregroundColor = .cyan
+        result.append(perf5a)
+        
+        var perf6 = AttributedString(", and avoiding unnecessary ")
+        perf6.font = .system(size: 32)
+        perf6.foregroundColor = .white
+        result.append(perf6)
+        
+        var perf6a = AttributedString("state updates")
+        perf6a.font = .system(size: 32, weight: .semibold)
+        perf6a.foregroundColor = .purple
+        result.append(perf6a)
+        
+        var perf7 = AttributedString(".\n\n")
+        perf7.font = .system(size: 32)
+        perf7.foregroundColor = .white
+        result.append(perf7)
+        
+        // SECTION 9: Accessibility
+        var section9Title = AttributedString("♿ Accessibility Features\n")
+        section9Title.font = .system(size: 40, weight: .bold)
+        section9Title.foregroundColor = .green
+        result.append(section9Title)
+        
+        var access1 = AttributedString("Accessibility on tvOS includes ")
+        access1.font = .system(size: 32)
+        access1.foregroundColor = .white
+        result.append(access1)
+        
+        var access1a = AttributedString("VoiceOver")
+        access1a.font = .system(size: 32, weight: .bold)
+        access1a.foregroundColor = .orange
+        result.append(access1a)
+        
+        var access2 = AttributedString(" support, which reads content aloud to users with visual impairments. Proper semantic structure, meaningful labels, and logical reading order ensure that ")
+        access2.font = .system(size: 32)
+        access2.foregroundColor = .white
+        result.append(access2)
+        
+        var access2a = AttributedString("all users")
+        access2a.font = .system(size: 34, weight: .bold).italic()
+        access2a.foregroundColor = .pink
+        result.append(access2a)
+        
+        var access3 = AttributedString(" can navigate and consume content effectively, regardless of their physical abilities.\n\n")
+        access3.font = .system(size: 32)
+        access3.foregroundColor = .white
+        result.append(access3)
+        
+        var access4 = AttributedString("Additional features include ")
+        access4.font = .system(size: 32)
+        access4.foregroundColor = .white
+        result.append(access4)
+        
+        var access4a = AttributedString("Dynamic Type")
+        access4a.font = .system(size: 32, weight: .semibold)
+        access4a.foregroundColor = .cyan
+        result.append(access4a)
+        
+        var access5 = AttributedString(" for text scaling, ")
+        access5.font = .system(size: 32)
+        access5.foregroundColor = .white
+        result.append(access5)
+        
+        var access5a = AttributedString("Reduce Motion")
+        access5a.font = .system(size: 32, weight: .semibold)
+        access5a.foregroundColor = .yellow
+        result.append(access5a)
+        
+        var access6 = AttributedString(" for animation preferences, and ")
+        access6.font = .system(size: 32)
+        access6.foregroundColor = .white
+        result.append(access6)
+        
+        var access6a = AttributedString("Increase Contrast")
+        access6a.font = .system(size: 32, weight: .semibold)
+        access6a.foregroundColor = .purple
+        result.append(access6a)
+        
+        var access7 = AttributedString(" for better visibility.\n\n")
+        access7.font = .system(size: 32)
+        access7.foregroundColor = .white
+        result.append(access7)
+        
+        // SECTION 10: Animation & Transitions
+        var section10Title = AttributedString("🎬 Animation & Transitions\n")
+        section10Title.font = .system(size: 40, weight: .bold)
+        section10Title.foregroundColor = .green
+        result.append(section10Title)
+        
+        var anim1 = AttributedString("This scrolling implementation uses ")
+        anim1.font = .system(size: 32)
+        anim1.foregroundColor = .white
+        result.append(anim1)
+        
+        var anim1a = AttributedString("easeInOut")
+        anim1a.font = .system(size: 32, weight: .semibold)
+        anim1a.foregroundColor = .cyan
+        result.append(anim1a)
+        
+        var anim2 = AttributedString(" animation curves that provide natural acceleration and deceleration. The ")
+        anim2.font = .system(size: 32)
+        anim2.foregroundColor = .white
+        result.append(anim2)
+        
+        var anim2a = AttributedString("0.3-second duration")
+        anim2a.font = .system(size: 32).italic()
+        anim2a.foregroundColor = .yellow
+        result.append(anim2a)
+        
+        var anim3 = AttributedString(" feels responsive without being jarring, creating a polished user experience that feels ")
+        anim3.font = .system(size: 32)
+        anim3.foregroundColor = .white
+        result.append(anim3)
+        
+        var anim3a = AttributedString("premium")
+        anim3a.font = .system(size: 34, weight: .bold)
+        anim3a.foregroundColor = .pink
+        result.append(anim3a)
+        
+        var anim4 = AttributedString(" and professional.\n\n")
+        anim4.font = .system(size: 32)
+        anim4.foregroundColor = .white
+        result.append(anim4)
+        
+        // SECTION 11: Architecture
+        var section11Title = AttributedString("🏗️ MVVM Architecture\n")
+        section11Title.font = .system(size: 40, weight: .bold)
+        section11Title.foregroundColor = .green
+        result.append(section11Title)
+        
+        var arch1 = AttributedString("This demonstration follows the ")
+        arch1.font = .system(size: 32)
+        arch1.foregroundColor = .white
+        result.append(arch1)
+        
+        var arch1a = AttributedString("Model-View-ViewModel")
+        arch1a.font = .system(size: 32, weight: .bold)
+        arch1a.foregroundColor = .orange
+        result.append(arch1a)
+        
+        var arch2 = AttributedString(" pattern, separating ")
+        arch2.font = .system(size: 32)
+        arch2.foregroundColor = .white
+        result.append(arch2)
+        
+        var arch2a = AttributedString("presentation logic")
+        arch2a.font = .system(size: 32).italic()
+        arch2a.foregroundColor = .cyan
+        result.append(arch2a)
+        
+        var arch3 = AttributedString(" from ")
+        arch3.font = .system(size: 32)
+        arch3.foregroundColor = .white
+        result.append(arch3)
+        
+        var arch3a = AttributedString("business logic")
+        arch3a.font = .system(size: 32).italic()
+        arch3a.foregroundColor = .purple
+        result.append(arch3a)
+        
+        var arch4 = AttributedString(" and ")
+        arch4.font = .system(size: 32)
+        arch4.foregroundColor = .white
+        result.append(arch4)
+        
+        var arch4a = AttributedString("UI rendering")
+        arch4a.font = .system(size: 32).italic()
+        arch4a.foregroundColor = .yellow
+        result.append(arch4a)
+        
+        var arch5 = AttributedString(". This architectural approach promotes ")
+        arch5.font = .system(size: 32)
+        arch5.foregroundColor = .white
+        result.append(arch5)
+        
+        var arch5a = AttributedString("testability")
+        arch5a.font = .system(size: 32, weight: .semibold)
+        arch5a.foregroundColor = .green
+        result.append(arch5a)
+        
+        var arch6 = AttributedString(", ")
+        arch6.font = .system(size: 32)
+        arch6.foregroundColor = .white
+        result.append(arch6)
+        
+        var arch6a = AttributedString("maintainability")
+        arch6a.font = .system(size: 32, weight: .semibold)
+        arch6a.foregroundColor = .cyan
+        result.append(arch6a)
+        
+        var arch7 = AttributedString(", and ")
+        arch7.font = .system(size: 32)
+        arch7.foregroundColor = .white
+        result.append(arch7)
+        
+        var arch7a = AttributedString("reusability")
+        arch7a.font = .system(size: 32, weight: .semibold)
+        arch7a.foregroundColor = .pink
+        result.append(arch7a)
+        
+        var arch8 = AttributedString(".\n\n")
+        arch8.font = .system(size: 32)
+        arch8.foregroundColor = .white
+        result.append(arch8)
+        
+        var arch9 = AttributedString("The ViewModel handles content loading, state management, and mode switching, while the View focuses purely on presentation and user interaction.\n\n")
+        arch9.font = .system(size: 32)
+        arch9.foregroundColor = .white
+        result.append(arch9)
+        
+        // SECTION 12: Real-World Applications
+        var section12Title = AttributedString("💼 Real-World Applications\n")
+        section12Title.font = .system(size: 40, weight: .bold)
+        section12Title.foregroundColor = .green
+        result.append(section12Title)
+        
+        var app1 = AttributedString("AttributedStrings shine in numerous real-world scenarios:\n\n")
+        app1.font = .system(size: 32)
+        app1.foregroundColor = .white
+        result.append(app1)
+        
+        var bullet1 = AttributedString("• News & Articles: ")
+        bullet1.font = .system(size: 32, weight: .bold)
+        bullet1.foregroundColor = .yellow
+        result.append(bullet1)
+        
+        var bullet1a = AttributedString("Headlines, bylines, and body text with distinct styling\n")
+        bullet1a.font = .system(size: 32)
+        bullet1a.foregroundColor = .white
+        result.append(bullet1a)
+        
+        var bullet2 = AttributedString("• Movie Descriptions: ")
+        bullet2.font = .system(size: 32, weight: .bold)
+        bullet2.foregroundColor = .cyan
+        result.append(bullet2)
+        
+        var bullet2a = AttributedString("Titles, ratings, genres, and synopses with rich formatting\n")
+        bullet2a.font = .system(size: 32)
+        bullet2a.foregroundColor = .white
+        result.append(bullet2a)
+        
+        var bullet3 = AttributedString("• Shopping Apps: ")
+        bullet3.font = .system(size: 32, weight: .bold)
+        bullet3.foregroundColor = .orange
+        result.append(bullet3)
+        
+        var bullet3a = AttributedString("Product names, prices, discounts, and descriptions\n")
+        bullet3a.font = .system(size: 32)
+        bullet3a.foregroundColor = .white
+        result.append(bullet3a)
+        
+        var bullet4 = AttributedString("• Recipe Apps: ")
+        bullet4.font = .system(size: 32, weight: .bold)
+        bullet4.foregroundColor = .pink
+        result.append(bullet4)
+        
+        var bullet4a = AttributedString("Ingredients, instructions, timing, and nutritional info\n")
+        bullet4a.font = .system(size: 32)
+        bullet4a.foregroundColor = .white
+        result.append(bullet4a)
+        
+        var bullet5 = AttributedString("• Educational Content: ")
+        bullet5.font = .system(size: 32, weight: .bold)
+        bullet5.foregroundColor = .purple
+        result.append(bullet5)
+        
+        var bullet5a = AttributedString("Lessons with emphasized key terms and concepts\n\n")
+        bullet5a.font = .system(size: 32)
+        bullet5a.foregroundColor = .white
+        result.append(bullet5a)
+        
+        // SECTION 13: Best Practices
+        var section13Title = AttributedString("✅ Best Practices & Guidelines\n")
+        section13Title.font = .system(size: 40, weight: .bold)
+        section13Title.foregroundColor = .green
+        result.append(section13Title)
+        
+        var bp1 = AttributedString("Tip #1: ")
+        bp1.font = .system(size: 32, weight: .bold)
+        bp1.foregroundColor = .red
+        result.append(bp1)
+        
+        var bp1a = AttributedString("Use ")
+        bp1a.font = .system(size: 32)
+        bp1a.foregroundColor = .white
+        result.append(bp1a)
+        
+        var bp1b = AttributedString("consistent color palettes")
+        bp1b.font = .system(size: 32).italic()
+        bp1b.foregroundColor = .yellow
+        result.append(bp1b)
+        
+        var bp1c = AttributedString(" throughout your app to maintain visual coherence and brand identity.\n\n")
+        bp1c.font = .system(size: 32)
+        bp1c.foregroundColor = .white
+        result.append(bp1c)
+        
+        var bp2 = AttributedString("Tip #2: ")
+        bp2.font = .system(size: 32, weight: .bold)
+        bp2.foregroundColor = .red
+        result.append(bp2)
+        
+        var bp2a = AttributedString("Limit the number of ")
+        bp2a.font = .system(size: 32)
+        bp2a.foregroundColor = .white
+        result.append(bp2a)
+        
+        var bp2b = AttributedString("font weights")
+        bp2b.font = .system(size: 32).italic()
+        bp2b.foregroundColor = .cyan
+        result.append(bp2b)
+        
+        var bp2c = AttributedString(" in a single view to avoid visual clutter and maintain hierarchy.\n\n")
+        bp2c.font = .system(size: 32)
+        bp2c.foregroundColor = .white
+        result.append(bp2c)
+        
+        var bp3 = AttributedString("Tip #3: ")
+        bp3.font = .system(size: 32, weight: .bold)
+        bp3.foregroundColor = .red
+        result.append(bp3)
+        
+        var bp3a = AttributedString("Test on ")
+        bp3a.font = .system(size: 32)
+        bp3a.foregroundColor = .white
+        result.append(bp3a)
+        
+        var bp3b = AttributedString("actual TV hardware")
+        bp3b.font = .system(size: 32).italic()
+        bp3b.foregroundColor = .purple
+        result.append(bp3b)
+        
+        var bp3c = AttributedString(" from typical viewing distances to ensure readability.\n\n")
+        bp3c.font = .system(size: 32)
+        bp3c.foregroundColor = .white
+        result.append(bp3c)
+        
+        var bp4 = AttributedString("Tip #4: ")
+        bp4.font = .system(size: 32, weight: .bold)
+        bp4.foregroundColor = .red
+        result.append(bp4)
+        
+        var bp4a = AttributedString("Prioritize ")
+        bp4a.font = .system(size: 32)
+        bp4a.foregroundColor = .white
+        result.append(bp4a)
+        
+        var bp4b = AttributedString("high contrast")
+        bp4b.font = .system(size: 32).italic()
+        bp4b.foregroundColor = .orange
+        result.append(bp4b)
+        
+        var bp4c = AttributedString(" between text and background colors for maximum legibility.\n\n")
+        bp4c.font = .system(size: 32)
+        bp4c.foregroundColor = .white
+        result.append(bp4c)
+        
+        // SECTION 14: Future Enhancements
+        var section14Title = AttributedString("🚀 Future Enhancements\n")
+        section14Title.font = .system(size: 40, weight: .bold)
+        section14Title.foregroundColor = .green
+        result.append(section14Title)
+        
+        var future1 = AttributedString("This implementation serves as a ")
+        future1.font = .system(size: 32)
+        future1.foregroundColor = .white
+        result.append(future1)
+        
+        var future1a = AttributedString("proof of concept")
+        future1a.font = .system(size: 32, weight: .bold)
+        future1a.foregroundColor = .cyan
+        result.append(future1a)
+        
+        var future2 = AttributedString(" that can be extended with additional features such as:\n\n")
+        future2.font = .system(size: 32)
+        future2.foregroundColor = .white
+        result.append(future2)
+        
+        var future3 = AttributedString("→ Momentum scrolling with deceleration\n→ Page indicators showing scroll progress\n→ Search functionality with highlighted results\n→ Bookmarking favorite sections\n→ Content sharing capabilities\n→ Dark/Light mode theming\n→ Customizable font size preferences\n→ Multi-column layouts for large displays\n\n")
+        future3.font = .system(size: 30)
+        future3.foregroundColor = .white
+        result.append(future3)
+        
+        // SECTION 15: Conclusion
+        var section15Title = AttributedString("🎯 Conclusion\n")
+        section15Title.font = .system(size: 40, weight: .bold)
+        section15Title.foregroundColor = .green
+        result.append(section15Title)
+        
+        var conclusion1 = AttributedString("AttributedStrings in SwiftUI represent a ")
+        conclusion1.font = .system(size: 32)
+        conclusion1.foregroundColor = .white
+        result.append(conclusion1)
+        
+        var conclusion1a = AttributedString("powerful tool")
+        conclusion1a.font = .system(size: 34, weight: .bold)
+        conclusion1a.foregroundColor = .yellow
+        result.append(conclusion1a)
+        
+        var conclusion2 = AttributedString(" for creating ")
+        conclusion2.font = .system(size: 32)
+        conclusion2.foregroundColor = .white
+        result.append(conclusion2)
+        
+        var conclusion2a = AttributedString("engaging")
+        conclusion2a.font = .system(size: 32).italic()
+        conclusion2a.foregroundColor = .orange
+        result.append(conclusion2a)
+        
+        var conclusion3 = AttributedString(", ")
+        conclusion3.font = .system(size: 32)
+        conclusion3.foregroundColor = .white
+        result.append(conclusion3)
+        
+        var conclusion3a = AttributedString("beautiful")
+        conclusion3a.font = .system(size: 32).italic()
+        conclusion3a.foregroundColor = .pink
+        result.append(conclusion3a)
+        
+        var conclusion4 = AttributedString(", and ")
+        conclusion4.font = .system(size: 32)
+        conclusion4.foregroundColor = .white
+        result.append(conclusion4)
+        
+        var conclusion4a = AttributedString("highly readable")
+        conclusion4a.font = .system(size: 32).italic()
+        conclusion4a.foregroundColor = .cyan
+        result.append(conclusion4a)
+        
+        var conclusion5 = AttributedString(" text interfaces. When combined with proper architecture, thoughtful design, and attention to platform-specific considerations, they enable developers to craft ")
+        conclusion5.font = .system(size: 32)
+        conclusion5.foregroundColor = .white
+        result.append(conclusion5)
+        
+        var conclusion5a = AttributedString("exceptional user experiences")
+        conclusion5a.font = .system(size: 34, weight: .bold).italic()
+        conclusion5a.foregroundColor = .purple
+        result.append(conclusion5a)
+        
+        var conclusion6 = AttributedString(" that delight users and set your applications apart.\n\n")
+        conclusion6.font = .system(size: 32)
+        conclusion6.foregroundColor = .white
+        result.append(conclusion6)
+        
+        var conclusion7 = AttributedString("The journey of mastering attributed strings is one of continuous exploration and refinement. Each project presents new opportunities to experiment with typography, color, and layout—creating digital experiences that are not just functional, but ")
+        conclusion7.font = .system(size: 32)
+        conclusion7.foregroundColor = .white
+        result.append(conclusion7)
+        
+        var conclusion7a = AttributedString("truly memorable")
+        conclusion7a.font = .system(size: 36, weight: .bold)
+        conclusion7a.foregroundColor = .red
+        result.append(conclusion7a)
+        
+        var conclusion8 = AttributedString(".\n\n")
+        conclusion8.font = .system(size: 32)
+        conclusion8.foregroundColor = .white
+        result.append(conclusion8)
         
         // Footer
-        var footer = AttributedString("End of AttributedString Demo")
-        footer.font = .system(size: 36, weight: .semibold).italic()
-        footer.foregroundColor = .cyan
+        var footer = AttributedString("━━━━━━━━━━━━━━━━━━━━━━\n")
+        footer.font = .system(size: 28)
+        footer.foregroundColor = .gray
         result.append(footer)
+        
+        var footerText = AttributedString("Thank you for exploring this AttributedString showcase!\n")
+        footerText.font = .system(size: 32).italic()
+        footerText.foregroundColor = .cyan
+        result.append(footerText)
+        
+        var footerEnd = AttributedString("Built with ❤️ using SwiftUI & AttributedString")
+        footerEnd.font = .system(size: 28, weight: .medium)
+        footerEnd.foregroundColor = .yellow
+        result.append(footerEnd)
         
         return result
     }
