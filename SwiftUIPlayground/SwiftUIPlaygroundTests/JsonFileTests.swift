@@ -70,48 +70,6 @@ struct JsonFileTests {
 		#expect(unwrappedRoot.name == "John Doe")
 	}
 
-	@Test("Print all available paths and files in test bundle")
-	func printAllPathsAndFilesInTestBundle() throws {
-		final class BundleHelper: AnyObject {}
-		let bundle = Bundle(for: BundleHelper.self)
-
-		guard let resourcePath = bundle.resourcePath else {
-			print("No resource path found in test bundle")
-			Issue.record("No resource path in bundle")
-			return
-		}
-
-		func printDirectoryContents(at path: String, level: Int = 0) {
-			let indent = String(repeating: "  ", count: level)
-			let fileManager = FileManager.default
-			guard let enumerator = fileManager.enumerator(atPath: path) else {
-				print("\(indent)- Could not enumerate directory at \(path)")
-				return
-			}
-			var seenDirs = Set<String>()
-			for case let item as String in enumerator {
-				let fullPath = (path as NSString).appendingPathComponent(item)
-				var isDir: ObjCBool = false
-				if fileManager.fileExists(atPath: fullPath, isDirectory: &isDir) {
-					if isDir.boolValue {
-						let dir = (item as NSString).lastPathComponent
-						if !seenDirs.contains(dir) {
-							print("\(indent)📁 \(item)/")
-							seenDirs.insert(dir)
-						}
-					} else {
-						print("\(indent)📄 \(item)")
-					}
-				}
-			}
-		}
-
-		print("====== Listing all files and folders in test target bundle ======")
-		printDirectoryContents(at: resourcePath)
-		print("======= End of listing =======")
-		#expect(true) // dummy to register as a valid test
-	}
-
 	@Test("loading root_content file")
 	func testOnLoadingRootContentFile() throws {
 		// 1. Access the test bundle
