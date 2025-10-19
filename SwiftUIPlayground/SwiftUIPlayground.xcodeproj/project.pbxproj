@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A6403B112EA3F5EC00B5F062 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlaygroundTests" target */ = {
+		A6403B882EA4756A00B5F062 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlaygroundTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Util/JsonFile.swift,
@@ -43,7 +43,7 @@
 		0F53A7942E25029F0096E995 /* SwiftUIPlayground */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				A6403B112EA3F5EC00B5F062 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlaygroundTests" target */,
+				A6403B882EA4756A00B5F062 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlaygroundTests" target */,
 			);
 			path = SwiftUIPlayground;
 			sourceTree = "<group>";

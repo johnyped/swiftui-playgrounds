@@ -14,16 +14,34 @@ struct Person: Codable, Identifiable, Equatable {
 	let name: String
 }
 
+enum JsonContentType {
+	case singleObject
+	case array
+}
+
 struct JsonFileInfo: Identifiable {
 	let id = UUID()
 	let fileName: String
 	let path: String
 	let description: String
+	let contentType: JsonContentType
 	var person: Person?
+	var people: [Person]?
 	var error: String?
 	
 	var fullPath: String {
 		path.isEmpty ? fileName : "\(path)/\(fileName)"
+	}
+	
+	var isLoaded: Bool {
+		person != nil || people != nil
+	}
+	
+	var itemCount: Int {
+		if let people = people {
+			return people.count
+		}
+		return person != nil ? 1 : 0
 	}
 }
 
@@ -44,12 +62,26 @@ class DemoReadJsonViewModel {
 			JsonFileInfo(
 				fileName: "content",
 				path: "Jsons",
-				description: "Person data from Jsons folder"
+				description: "Single person from Jsons folder",
+				contentType: .singleObject
+			),
+			JsonFileInfo(
+				fileName: "users",
+				path: "Jsons",
+				description: "Array of users from Jsons folder",
+				contentType: .array
 			),
 			JsonFileInfo(
 				fileName: "nest_content",
 				path: "Jsons/Nest",
-				description: "Person data from nested folder"
+				description: "Single person from nested folder",
+				contentType: .singleObject
+			),
+			JsonFileInfo(
+				fileName: "team",
+				path: "Jsons/Nest",
+				description: "Array of team members from nested folder",
+				contentType: .array
 			)
 		]
 	}
@@ -57,36 +89,44 @@ class DemoReadJsonViewModel {
 	func loadAllFiles() {
 		isLoading = true
 		
-		// Load each file using JsonFile
+		// Load each file using JsonLoader
 		for index in jsonFiles.indices {
-			let fileInfo = jsonFiles[index]
-			let jsonFile = JsonFile(path: fileInfo.path)
-			
-			// Try to decode the file
-			if let person = jsonFile.decode(from: fileInfo.fileName, as: Person.self) {
-				jsonFiles[index].person = person
-				jsonFiles[index].error = nil
-			} else {
-				jsonFiles[index].person = nil
-				jsonFiles[index].error = "Failed to load or decode file"
-			}
+			loadFileInternal(at: index)
 		}
 		
 		isLoading = false
 	}
 	
 	func loadFile(at index: Int) {
+		loadFileInternal(at: index)
+	}
+	
+	private func loadFileInternal(at index: Int) {
 		guard index < jsonFiles.count else { return }
 		
 		let fileInfo = jsonFiles[index]
-		let jsonFile = JsonFile(path: fileInfo.path)
+		let jsonLoader = JsonFile(path: fileInfo.path)
 		
-		if let person = jsonFile.decode(from: fileInfo.fileName, as: Person.self) {
-			jsonFiles[index].person = person
-			jsonFiles[index].error = nil
-		} else {
-			jsonFiles[index].person = nil
-			jsonFiles[index].error = "Failed to load or decode file"
+		switch fileInfo.contentType {
+		case .singleObject:
+			if let person = jsonLoader.decode(from: fileInfo.fileName, as: Person.self) {
+				jsonFiles[index].person = person
+				jsonFiles[index].people = nil
+				jsonFiles[index].error = nil
+			} else {
+				jsonFiles[index].person = nil
+				jsonFiles[index].error = "Failed to load or decode single object"
+			}
+			
+		case .array:
+			if let people = jsonLoader.decodeArray(from: fileInfo.fileName, as: Person.self) {
+				jsonFiles[index].people = people
+				jsonFiles[index].person = nil
+				jsonFiles[index].error = nil
+			} else {
+				jsonFiles[index].people = nil
+				jsonFiles[index].error = "Failed to load or decode array"
+			}
 		}
 	}
 	
@@ -94,9 +134,9 @@ class DemoReadJsonViewModel {
 		guard index < jsonFiles.count else { return nil }
 		
 		let fileInfo = jsonFiles[index]
-		let jsonFile = JsonFile(path: fileInfo.path)
+		let jsonLoader = JsonFile(path: fileInfo.path)
 		
-		return jsonFile.jsonString(from: fileInfo.fileName, prettyPrinted: true)
+		return jsonLoader.jsonString(from: fileInfo.fileName, prettyPrinted: true)
 	}
 }
 
@@ -205,14 +245,21 @@ struct DemoReadJsonView: View {
 			
 			if viewModel.showDebugInfo {
 				VStack(alignment: .leading, spacing: 8) {
-					Text("Files loaded: \(viewModel.jsonFiles.filter { $0.person != nil }.count)/\(viewModel.jsonFiles.count)")
+					Text("Files loaded: \(viewModel.jsonFiles.filter { $0.isLoaded }.count)/\(viewModel.jsonFiles.count)")
 					
 					ForEach(viewModel.jsonFiles) { fileInfo in
 						HStack {
-							Image(systemName: fileInfo.person != nil ? "checkmark.circle.fill" : "xmark.circle.fill")
-								.foregroundStyle(fileInfo.person != nil ? .green : .red)
-							Text(fileInfo.fullPath)
-								.font(.system(.caption, design: .monospaced))
+							Image(systemName: fileInfo.isLoaded ? "checkmark.circle.fill" : "xmark.circle.fill")
+								.foregroundStyle(fileInfo.isLoaded ? .green : .red)
+							VStack(alignment: .leading, spacing: 2) {
+								Text(fileInfo.fullPath)
+									.font(.system(.caption, design: .monospaced))
+								if fileInfo.isLoaded {
+									Text("\(fileInfo.itemCount) item(s) • \(fileInfo.contentType == .array ? "Array" : "Object")")
+										.font(.system(.caption2, design: .monospaced))
+										.foregroundStyle(.secondary)
+								}
+							}
 						}
 					}
 					
@@ -277,9 +324,29 @@ struct JsonFileCard: View {
 			
 			Divider()
 			
+			// Content type badge
+			HStack {
+				Image(systemName: fileInfo.contentType == .array ? "list.bullet" : "doc")
+					.foregroundStyle(.blue)
+				Text(fileInfo.contentType == .array ? "JSON Array" : "JSON Object")
+					.font(.caption)
+					.fontWeight(.medium)
+				Spacer()
+				if fileInfo.isLoaded {
+					Text("\(fileInfo.itemCount) item\(fileInfo.itemCount == 1 ? "" : "s")")
+						.font(.caption2)
+						.foregroundStyle(.secondary)
+				}
+			}
+			.padding(.horizontal, 12)
+			.padding(.vertical, 6)
+			.background(.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+			
 			// Content
 			if let person = fileInfo.person {
 				personContent(person)
+			} else if let people = fileInfo.people {
+				peopleContent(people)
 			} else if let error = fileInfo.error {
 				errorContent(error)
 			} else {
@@ -361,6 +428,58 @@ struct JsonFileCard: View {
 			}
 			.padding()
 			.background(.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+		}
+	}
+	
+	private func peopleContent(_ people: [Person]) -> some View {
+		VStack(spacing: 8) {
+			ForEach(Array(people.enumerated()), id: \.element.id) { index, person in
+				HStack(spacing: 12) {
+					// Index badge
+					Text("\(index + 1)")
+						.font(.caption)
+						.fontWeight(.bold)
+						.foregroundStyle(.white)
+						.frame(width: 24, height: 24)
+						.background(.blue.gradient, in: Circle())
+					
+					// ID
+					VStack(alignment: .leading, spacing: 2) {
+						Text("ID")
+							.font(.caption2)
+							.foregroundStyle(.secondary)
+						Text("\(person.id)")
+							.font(.subheadline)
+							.fontWeight(.semibold)
+							.foregroundStyle(.blue)
+					}
+					
+					Divider()
+						.frame(height: 30)
+					
+					// Name
+					VStack(alignment: .leading, spacing: 2) {
+						Text("Name")
+							.font(.caption2)
+							.foregroundStyle(.secondary)
+						Text(person.name)
+							.font(.subheadline)
+							.fontWeight(.medium)
+					}
+					
+					Spacer()
+				}
+				.padding(.horizontal, 12)
+				.padding(.vertical, 8)
+				.background(
+					RoundedRectangle(cornerRadius: 10)
+						.fill(.green.opacity(0.05))
+						.overlay(
+							RoundedRectangle(cornerRadius: 10)
+								.stroke(.green.opacity(0.2), lineWidth: 1)
+						)
+				)
+			}
 		}
 	}
 	

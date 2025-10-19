@@ -213,10 +213,10 @@ extension JsonFile {
     }
 }
 
-// MARK: - FileHelper (Simplified)
+// MARK: - BundleHelper (Simplified)
 
-class FileHelper {
-    static let shared = FileHelper()
+class BundleHelper {
+    static let shared = BundleHelper()
     private let decoder = JSONDecoder()
     
     /// Load data from a resource file
@@ -242,9 +242,9 @@ class FileHelper {
         return try decoder.decode([T].self, from: data)
     }
 
-    /// Print all available paths and files in the test bundle for debugging purposes.
-    /// This helps visualize the folder structure and all files packaged in the test bundle.
-    static func printAllPathsAndFilesInTestBundle() {
+    /// Print all available paths and files in the bundle for debugging purposes.
+    /// This helps visualize the folder structure and all files packaged in the bundle.
+    static func printAllPathsAndFilesInBundle() {
         final class BundleHelper: AnyObject {}
         let bundle = Bundle(for: BundleHelper.self)
 
