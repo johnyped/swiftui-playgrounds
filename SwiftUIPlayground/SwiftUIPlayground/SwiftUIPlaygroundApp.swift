@@ -17,6 +17,8 @@ struct SwiftUIPlaygroundApp: App {
         iPadRootScene()
     #elseif os(macOS)
         MacRootScene()
+    #elseif os(tvOS)
+        tvOSRootScene()
     #endif    
     }
 }
